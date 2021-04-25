@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Config>
   
-  //(classname = {0})   (position = {1})   (direction = {2}) (setVectorUp (true/false) = {3})
+  //(classname = {0})   (position = {1})   (direction = {2})	(init = {3})	(isInit ((true / false) if init null or empty) = {4})	(Comma (Applies to all but last) = {5})
   
-  //Example of what [{0}, [{1}, {2}], {3}] would output:  ["MAP_Hangar_2", [[2128.1116, 11655.643, 0.23700279], 175.5399], true]
+  //Example of what [{0}, [{1}, {2}], {3}]{5} would output:  ["MAP_Hangar_2", [[2128.1116, 11655.643, 0.23700279], 175.5399], true],
   //Example without setVectorUp: [{0}, [{1}, {2}]] would output: ["MAP_Hangar_2", [[2128.1116, 11655.643, 0.23700279], 175.5399]]
   <Format>[{0}, [{1}, {2}], {3}],</Format> //The formatting of each line.
   

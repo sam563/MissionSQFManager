@@ -47,7 +47,7 @@
     <Compile Include="SQFClassNameCorrector.cs" />
     <Compile Include="SQFFormatter.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="SQFConverter.cs" />
+    <Compile Include="SQFToGOConverter.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="Program.cs" />

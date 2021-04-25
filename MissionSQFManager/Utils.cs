@@ -13,7 +13,7 @@ namespace MissionSQFManager
         public static void WriteError(string errorMsg)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(errorMsg);
+            Console.WriteLine($"Error, {errorMsg}");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -54,6 +54,30 @@ namespace MissionSQFManager
             }
 
             return names;
+        }
+
+        public static char FindNextNoneSpaceChar(string text, int position)
+        {
+            for (int i = (position + 1); i < text.Length; i++)
+            {
+                char cur = text[i];
+
+                if (cur != ' ') return cur;
+            }
+
+            return new char();
+        }
+
+        public static char FinddPreviousNoneSpaceChar(string text, int position)
+        {
+            for (int i = (position - 1); i <= 0; i--)
+            {
+                char cur = text[i];
+
+                if (cur != ' ') return cur;
+            }
+
+            return new char();
         }
     }
 }

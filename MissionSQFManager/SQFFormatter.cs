@@ -48,7 +48,7 @@ namespace MissionSQFManager
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            var gameObjects = SQFConverter.SQFToGameObjects(file);
+            var gameObjects = SQFToGOConverter.SQFToGameObjects(file);
 
             if (gameObjects.Length <= 0)
             {
@@ -71,30 +71,25 @@ namespace MissionSQFManager
         {
             string[] formattedArray = new string[gameObjects.Length];
 
-            for (int i = 0; i < gameObjects.Length; i++)
-            {
-                if (GameObjectToFormattedString(out string line, gameObjects[i]))
-                {
-                    formattedArray[i] = line;
-
-                    Console.WriteLine(line);
-                }
-            }
-
-            return formattedArray;
-        }
-
-        private static bool GameObjectToFormattedString(out string line, GameObject gameObject)
-        {
-            line = "";
-
-            if (!Utils.GetConfigXML(out XmlDocument xmlDoc)) return false;
+            if (!Utils.GetConfigXML(out XmlDocument xmlDoc)) return formattedArray;
 
             XmlNodeList Clist = xmlDoc.GetElementsByTagName("Format");
 
-            line = string.Format(Clist[0].InnerText, gameObject.className, gameObject.position, gameObject.direction, gameObject.isVectorUp);
 
-            return true;
+            for (int i = 0; i < gameObjects.Length; i++)
+            {
+                GameObject gameObject = gameObjects[i];
+
+                if (gameObject == null) Utils.WriteError($"Game object at index {i} was null!");
+
+                string comma = (i < gameObjects.Length) ? "," : "";
+                string isInit = (!string.IsNullOrEmpty(gameObject.init)) ? "true" : "false";
+                formattedArray[i] = string.Format(Clist[0].InnerText, $"\"{gameObject.className}\"", $"[{gameObject.position}]", gameObject.direction, $"\"{gameObject.init}\"", isInit, comma);
+
+                Console.WriteLine(formattedArray[i]);
+            }
+
+            return formattedArray;
         }
     }
 }

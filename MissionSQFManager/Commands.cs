@@ -26,7 +26,7 @@ namespace MissionSQFManager
             Command formatCode = new Command("1", "Format code", "Formats and compacts the code.");
             formatCode.onCommand += SQFFormatter.FormatInputFiles;
 
-            Command biediConvert = new Command("2", "Biedi Convert", "Converts a .SQF file to a .biedi file.");
+            Command biediConvert = new Command("2", "Convert to biedi", "Converts a .SQF file to a .biedi file.");
             biediConvert.onCommand += SQFToBiediConverter.ConvertInputsToBiedi;
         }
 

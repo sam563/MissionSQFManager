@@ -19,6 +19,9 @@ namespace MissionSQFManager
             Commands.RegisterCommands();
             Commands.DisplayHelp();
 
+            //Console.WriteLine($"Input: {Utils.GetInputPath()}");
+            //Console.WriteLine($"Output: {Utils.GetOutputPath()}");
+
             //Make sure input directory exists
             if (!Directory.Exists(Utils.GetInputPath())) Directory.CreateDirectory(Utils.GetInputPath());
 

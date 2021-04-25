@@ -47,7 +47,7 @@ namespace MissionSQFManager
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            GameObject[] gameObjects = SQFConverter.SQFToGameObjects(file);
+            GameObject[] gameObjects = SQFToGOConverter.SQFToGameObjects(file);
 
             List<string> lines = new List<string>();
 
@@ -57,15 +57,16 @@ namespace MissionSQFManager
 
                 int preLines = lines.Count;
 
+                //Where is the classname????
                 lines.Add($"class _vehicle_{i}");
                 lines.Add("{");
                 lines.Add("    objectType=\"vehicle\";");
                 lines.Add("    class Arguments");
                 lines.Add("    {");
-                lines.Add($"        POSITION={go.position};");
-                lines.Add($"        TYPE={go.className};");
+                lines.Add($"        POSITION=[{go.position}];");
+                lines.Add($"        TYPE=\"{go.className}\";");
                 lines.Add($"		AZIMUT={go.direction};");
-                if (go.isVectorUp) lines.Add($"		INIT=\"this setVectorUp[0, 0, 1]; \";");
+                if (!string.IsNullOrEmpty(go.init)) lines.Add($"		INIT=\"{go.init}\";");
                 lines.Add("		PARENT=\"\";");
                 lines.Add("	};");
                 lines.Add("};");
