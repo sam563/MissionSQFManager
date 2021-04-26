@@ -5,30 +5,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Diagnostics;
 
 namespace MissionSQFManager
 {
     public class SQFToGOConverter
     {
-        //private static List<GameObject> gameObjects;
+        private static GameObject[] gameObjects;
 
-        //public static List<GameObject> GetGameObjectsFromFile(string file)
-        //{
-        //    if (gameObjects == null || gameObjects.Count <= 0)
-        //    {
-        //        return SQFToGameObjects(file);
-        //    }
-
-        //    return gameObjects;
-        //}
+        public static GameObject[] GameObjects { get => gameObjects; private set => gameObjects = value; }
 
         public static GameObject[] SQFToGameObjects(string file)
         {
+            //This is quite convoluted but we want to try to support modified sqf files so being as generic as possible
+
             List<GameObject> gameObjects = new List<GameObject>();
 
             GameObject gameObject = null;
 
             string patternStartPoint = "";
+
+            int openQuotePos = -1;
+            int openPositionPos = -1;
+
+            bool isSingleQuote = false;
+            bool ignoreContent = false;
 
             void CheckSetStartPoint(string landmarkID)
             {
@@ -42,11 +43,10 @@ namespace MissionSQFManager
                     if (gameObject != null) gameObjects.Add(gameObject); //Only add it if we're back to the start of the pattern. Not if we are defining it as the start
                     gameObject = new GameObject();
                     patternStartPoint = landmarkID;
+                    openQuotePos = -1;
+                    openPositionPos = -1;
                 }
             }
-
-            int openQuotePos = -1;
-            int openPositionPos = -1;
 
             for (int i = 0; i < file.Length; i++)
             {
@@ -57,36 +57,48 @@ namespace MissionSQFManager
                     string vehicle = "createVehicle";
                     string unit = "createUnit";
 
-                    if (((i - 1) + vehicle.Length <= file.Length) && (file.Substring((i - 1), vehicle.Length) == vehicle))
+                    if (((i - 1) + vehicle.Length <= file.Length) && (file.Substring(i, vehicle.Length) == vehicle))
                     {
                         CheckSetStartPoint("type");
                         gameObject.type = GameObject.Type.Vehicle;
+                        continue;
                     }
-                    else if (((i - 1) + unit.Length <= file.Length) && (file.Substring((i - 1), unit.Length) == unit))
+                    else if (((i - 1) + unit.Length <= file.Length) && (file.Substring(i, unit.Length) == unit))
                     {
                         CheckSetStartPoint("type");
                         gameObject.type = GameObject.Type.Unit;
+                        continue;
                     }
-
-                    continue;
                 }
 
-                if (openQuotePos < 0 && cur == '"') openQuotePos = i; //Check if we found an opening quote
+                if (ignoreContent && cur == ']') ignoreContent = false; //We have reached the end of the addons array
 
-                if (openQuotePos < i && openQuotePos >= 0 && cur == '"')
+                //Check if we found an opening quote
+                if (!ignoreContent && openQuotePos < 0 && (cur == '"' || cur == '\''))
                 {
+                    openQuotePos = i;
+                }
+
+                char endQuote = isSingleQuote ? '\'' : '"';
+                bool isStringception = ((i + 1 < file.Length) && file[i + 1] == endQuote) || (i > 0 && file[i - 1] == endQuote); //If theres a second quote next to it, its instructions within a string
+                if (openQuotePos < i && openQuotePos >= 0 && cur == endQuote && !isStringception)
+                {
+                    //We found a closing quote
 
                     int textStart = openQuotePos + 1;
                     //Console.WriteLine($"Currently at char {i}, open quote at {openQuotePos}. Length {i - textStart}");
-                    string text = file.Substring(textStart, (i - openQuotePos) - 1);
+
+                    int textLength = ((i - openQuotePos) - 1);
+                    string text = file.Substring(textStart, textLength);
 
                     //Now determine if the string is a classname or init
-                    if (!StringContainsSpace(text))
+                    if (!text.Contains(' '))
                     {
-                        if (!IsClassName(text)) continue;
-
-                        CheckSetStartPoint("classname");
-                        gameObject.className = text;
+                        if (IsClassName(text))
+                        {
+                            CheckSetStartPoint("classname");
+                            gameObject.className = text;
+                        }
                     }
                     else
                     {
@@ -99,26 +111,60 @@ namespace MissionSQFManager
                     continue;
                 }
 
-                if (cur == '[' && char.IsDigit(Utils.FindNextNoneSpaceChar(file, i))) openPositionPos = i;
+                if (Utils.FindNextChar(file, i, out char nextChar, ' '))
+                {
+                    if (cur == '[' && char.IsDigit(nextChar)) openPositionPos = i;
+
+                    //Make sure we're not reading strings from within addons
+                    string addons = "activateAddons";
+
+                    if (Utils.FindPreviousChar(file, i, out int character, ' '))
+                    {
+                        if (file[character] == 's')
+                        {
+                            int start = ((character - addons.Length) + 1);
+
+                            if (file.Length >= addons.Length && start >= 0)
+                            {
+
+                                //Trace.WriteLine($"Start: {start}, Length: {addons.Length} Position: {i}");
+                                var s = file.Substring(start, addons.Length);
+                                //Trace.WriteLine(s);
+
+                                if (s == addons)
+                                {
+                                    ignoreContent = true;
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                }
 
                 if (openPositionPos < i && openPositionPos > 0 && cur == ']')
                 {
-                    string position = file.Substring((openPositionPos + 1), ((i - 1) - (openPositionPos + 1)));
+                    if (Utils.FindPreviousChar(file, i, out char prev, ' ') && char.IsDigit(prev))
+                    {
+                        string position = file.Substring((openPositionPos + 1), (i - (openPositionPos + 1)));
 
-                    Vector3.TryParse(position, out Vector3 result);
+                        if (Vector3.TryParse(position, out Vector3 result))
+                        {
+                            CheckSetStartPoint("position");
+                            gameObject.position = result;
 
-                    CheckSetStartPoint("position");
-                    gameObject.position = result;
-
-                    openPositionPos = -1;
-
-                    continue;
+                            openPositionPos = -1;
+                            continue;
+                        }
+                    }
                 }
 
                 if (char.IsDigit(cur) && !char.IsDigit(file[i + 1])) //Are we looking at the end of a number?
                 {
-                    //Rule out the posibility of it being a number in a position
-                    if (Utils.FindNextNoneSpaceChar(file, i) == ',') continue; 
+                    //Rule out the posibility of it being a number in a position vector
+                    if (Utils.FindNextChar(file, i, out nextChar, ' '))
+                    {
+                        if (nextChar == ',') continue;
+                    }
                     
                     int j;
                     for (j = i; j >= 0; j--)
@@ -126,18 +172,13 @@ namespace MissionSQFManager
                         if (!char.IsDigit(file[j]) && file[j] != '.') break;
                     }
 
-                    //Now we're at the start of the number...
-                    int startNum = j + 1;
-
                     //Now make sure there is no comma that comes directly before it.
-                    if (Utils.FinddPreviousNoneSpaceChar(file, startNum) == ',') continue;
-                    
-                    //We should now know this is a direction.
-
                 }
             }
 
-            return gameObjects.ToArray();
+            var goArr = gameObjects.ToArray();
+            GameObjects = goArr; //Cache gameobjects
+            return goArr;
         }
 
         private static bool IsClassName(string s)
@@ -155,11 +196,6 @@ namespace MissionSQFManager
             }
 
             return true;
-        }
-
-        private static bool StringContainsSpace(string text)
-        {
-            return text.Contains(' ');
         }
     }
 }

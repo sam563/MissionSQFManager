@@ -10,21 +10,15 @@ namespace MissionSQFManager
 {
     public class Utils
     {
-        public static void WriteError(string errorMsg)
+        public static void DebugWindow(object msg)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Error, {errorMsg}");
-            Console.ForegroundColor = ConsoleColor.White;
+            System.Windows.Forms.MessageBox.Show(msg.ToString(), "Debug");
         }
-
-        public static string GetInputPath() => (Path.Combine(Directory.GetCurrentDirectory(), Program.inputFolder));
-
-        public static string GetOutputPath() => (Path.Combine(Directory.GetCurrentDirectory(), Program.outputFolder));
 
         public static bool GetConfigXML(out XmlDocument xmlDoc)
         {
             xmlDoc = new XmlDocument();
-            string xmlPath = Path.Combine(Directory.GetCurrentDirectory(), Program.configName);
+            string xmlPath = Path.Combine(Directory.GetCurrentDirectory(), "Config.xml");
 
             if (File.Exists(xmlPath))
             {
@@ -33,51 +27,93 @@ namespace MissionSQFManager
             }
             else
             {
-                WriteError($"Could not find config at {xmlPath}!");
+                System.Diagnostics.Trace.TraceError($"Could not find config at {xmlPath}!");
                 return false;
             }
         }
 
-        public static string[] GetFileNamesInInput()
+        public static bool FindNextChar(string text, int currentCharIndex, out char character, params char[] blacklists)
         {
-            var paths = Directory.GetFiles(GetInputPath());
-
-            if (paths.Length <= 0)
+            if (FindNextChar(text, currentCharIndex, out int charPos, blacklists))
             {
-                return paths;
+                character = text[charPos];
+                return true;
             }
-
-            string[] names = new string[paths.Length];
-            for (int i = 0; i < paths.Length; i++)
+            else
             {
-                names[i] = Path.GetFileName(paths[i]);
+                character = new char();
+                return false;
             }
-
-            return names;
         }
 
-        public static char FindNextNoneSpaceChar(string text, int position)
+        public static bool FindNextChar(string text, int currentCharIndex, out int charPos, params char[] blacklists)
         {
-            for (int i = (position + 1); i < text.Length; i++)
+            charPos = -1;
+
+            for (int i = (currentCharIndex + 1); i < text.Length; i++)
             {
                 char cur = text[i];
 
-                if (cur != ' ') return cur;
+                bool isBlacklisted = false;
+
+                for (int j = 1; j < blacklists.Length; j++)
+                {
+                    if (cur == blacklists[i])
+                    {
+                        isBlacklisted = true;
+                        break;
+                    }
+                }
+
+                if (isBlacklisted) continue;
+
+                charPos = i;
+                return true;
             }
 
-            return new char();
+            return false;
         }
 
-        public static char FinddPreviousNoneSpaceChar(string text, int position)
+        public static bool FindPreviousChar(string text, int currentCharIndex, out char character, params char[] blacklists)
         {
-            for (int i = (position - 1); i <= 0; i--)
+            if (FindPreviousChar(text, currentCharIndex, out int charPos, blacklists))
+            {
+                character = text[charPos];
+                return true;
+            }
+            else
+            {
+                character = new char();
+                return false;
+            }
+        }
+
+        public static bool FindPreviousChar(string text, int currentCharIndex, out int charPos, params char[] blacklists)
+        {
+            charPos = -1;
+
+            for (int i = (currentCharIndex - 1); i >= 0; i--)
             {
                 char cur = text[i];
 
-                if (cur != ' ') return cur;
+                bool isBlacklisted = false;
+
+                for (int j = 1; j < blacklists.Length; j++)
+                {
+                    if (cur == blacklists[i])
+                    {
+                        isBlacklisted = true;
+                        break;
+                    }
+                }
+
+                if (isBlacklisted) continue;
+
+                charPos = i;
+                return true;
             }
 
-            return new char();
+            return false;
         }
     }
 }
