@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SQFMMForm));
             this.openFileButton = new System.Windows.Forms.Button();
             this.objectsList = new System.Windows.Forms.ListBox();
             this.objectCounter = new System.Windows.Forms.Label();
@@ -39,6 +40,9 @@
             this.saveOutputButton = new System.Windows.Forms.Button();
             this.sortByNamesCheckBox = new System.Windows.Forms.CheckBox();
             this.replaceClassnames = new System.Windows.Forms.CheckBox();
+            this.formatInputBox = new System.Windows.Forms.TextBox();
+            this.formatLabel = new System.Windows.Forms.Label();
+            this.formatHelpBox = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // openFileButton
@@ -77,7 +81,7 @@
             this.previewModeDropDown.Items.AddRange(new object[] {
             "Output Preview",
             "Raw Object Data"});
-            this.previewModeDropDown.Location = new System.Drawing.Point(888, 95);
+            this.previewModeDropDown.Location = new System.Drawing.Point(316, 104);
             this.previewModeDropDown.Name = "previewModeDropDown";
             this.previewModeDropDown.Size = new System.Drawing.Size(121, 21);
             this.previewModeDropDown.TabIndex = 3;
@@ -85,20 +89,22 @@
             // 
             // outputFormatDropDown
             // 
+            this.outputFormatDropDown.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.outputFormatDropDown.FormattingEnabled = true;
             this.outputFormatDropDown.Items.AddRange(new object[] {
             "Formatted SQF",
-            "Biedi"});
-            this.outputFormatDropDown.Location = new System.Drawing.Point(888, 562);
+            "Biedi",
+            "SQM"});
+            this.outputFormatDropDown.Location = new System.Drawing.Point(867, 74);
             this.outputFormatDropDown.Name = "outputFormatDropDown";
-            this.outputFormatDropDown.Size = new System.Drawing.Size(121, 21);
+            this.outputFormatDropDown.Size = new System.Drawing.Size(142, 21);
             this.outputFormatDropDown.TabIndex = 4;
             this.outputFormatDropDown.SelectedIndexChanged += new System.EventHandler(this.OutputFormatDropDown_SelectedIndexChanged);
             // 
             // previewModeLabel
             // 
             this.previewModeLabel.AutoSize = true;
-            this.previewModeLabel.Location = new System.Drawing.Point(807, 98);
+            this.previewModeLabel.Location = new System.Drawing.Point(235, 107);
             this.previewModeLabel.Name = "previewModeLabel";
             this.previewModeLabel.Size = new System.Drawing.Size(75, 13);
             this.previewModeLabel.TabIndex = 5;
@@ -107,7 +113,7 @@
             // outputFormatLabel
             // 
             this.outputFormatLabel.AutoSize = true;
-            this.outputFormatLabel.Location = new System.Drawing.Point(807, 567);
+            this.outputFormatLabel.Location = new System.Drawing.Point(786, 79);
             this.outputFormatLabel.Name = "outputFormatLabel";
             this.outputFormatLabel.Size = new System.Drawing.Size(74, 13);
             this.outputFormatLabel.TabIndex = 6;
@@ -116,10 +122,10 @@
             // fileName
             // 
             this.fileName.AutoSize = true;
-            this.fileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fileName.Location = new System.Drawing.Point(107, 84);
             this.fileName.Name = "fileName";
-            this.fileName.Size = new System.Drawing.Size(54, 13);
+            this.fileName.Size = new System.Drawing.Size(73, 15);
             this.fileName.TabIndex = 7;
             this.fileName.Text = "File Name";
             // 
@@ -141,9 +147,9 @@
             this.sortByNamesCheckBox.AutoSize = true;
             this.sortByNamesCheckBox.Location = new System.Drawing.Point(370, 561);
             this.sortByNamesCheckBox.Name = "sortByNamesCheckBox";
-            this.sortByNamesCheckBox.Size = new System.Drawing.Size(134, 17);
+            this.sortByNamesCheckBox.Size = new System.Drawing.Size(126, 17);
             this.sortByNamesCheckBox.TabIndex = 9;
-            this.sortByNamesCheckBox.Text = "Order By Alphanumeric";
+            this.sortByNamesCheckBox.Text = "Order By Class Name";
             this.sortByNamesCheckBox.UseVisualStyleBackColor = true;
             this.sortByNamesCheckBox.CheckedChanged += new System.EventHandler(this.SortByNamesCheckBox_CheckedChanged);
             // 
@@ -152,17 +158,53 @@
             this.replaceClassnames.AutoSize = true;
             this.replaceClassnames.Location = new System.Drawing.Point(536, 561);
             this.replaceClassnames.Name = "replaceClassnames";
-            this.replaceClassnames.Size = new System.Drawing.Size(184, 17);
+            this.replaceClassnames.Size = new System.Drawing.Size(189, 17);
             this.replaceClassnames.TabIndex = 10;
-            this.replaceClassnames.Text = "Replace Classnames From Config";
+            this.replaceClassnames.Text = "Replace Class Names From Config";
             this.replaceClassnames.UseVisualStyleBackColor = true;
             this.replaceClassnames.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
-            // SQFMMForum
+            // formatInputBox
+            // 
+            this.formatInputBox.Location = new System.Drawing.Point(807, 105);
+            this.formatInputBox.Name = "formatInputBox";
+            this.formatInputBox.Size = new System.Drawing.Size(202, 20);
+            this.formatInputBox.TabIndex = 11;
+            this.formatInputBox.TextChanged += new System.EventHandler(this.FormatInputBox_TextChanged);
+            // 
+            // formatLabel
+            // 
+            this.formatLabel.AutoSize = true;
+            this.formatLabel.Location = new System.Drawing.Point(762, 108);
+            this.formatLabel.Name = "formatLabel";
+            this.formatLabel.Size = new System.Drawing.Size(39, 13);
+            this.formatLabel.TabIndex = 12;
+            this.formatLabel.Text = "Format";
+            // 
+            // formatHelpBox
+            // 
+            this.formatHelpBox.FormattingEnabled = true;
+            this.formatHelpBox.Items.AddRange(new object[] {
+            "%0 Class Name",
+            "%1 Position",
+            "%2 Direction",
+            "%3 Init",
+            "%4 Has Init (bool: if has init true, no init false)",
+            "%5 Comma (Applies to all entries but last)"});
+            this.formatHelpBox.Location = new System.Drawing.Point(501, 43);
+            this.formatHelpBox.Name = "formatHelpBox";
+            this.formatHelpBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.formatHelpBox.Size = new System.Drawing.Size(242, 82);
+            this.formatHelpBox.TabIndex = 13;
+            // 
+            // SQFMMForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1143, 694);
+            this.ClientSize = new System.Drawing.Size(1147, 694);
+            this.Controls.Add(this.formatHelpBox);
+            this.Controls.Add(this.formatLabel);
+            this.Controls.Add(this.formatInputBox);
             this.Controls.Add(this.replaceClassnames);
             this.Controls.Add(this.sortByNamesCheckBox);
             this.Controls.Add(this.saveOutputButton);
@@ -174,7 +216,8 @@
             this.Controls.Add(this.objectCounter);
             this.Controls.Add(this.objectsList);
             this.Controls.Add(this.openFileButton);
-            this.Name = "SQFMMForum";
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "SQFMMForm";
             this.Text = "SQF Mission Manager";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -194,6 +237,9 @@
         private System.Windows.Forms.Button saveOutputButton;
         private System.Windows.Forms.CheckBox sortByNamesCheckBox;
         private System.Windows.Forms.CheckBox replaceClassnames;
+        private System.Windows.Forms.TextBox formatInputBox;
+        private System.Windows.Forms.Label formatLabel;
+        private System.Windows.Forms.ListBox formatHelpBox;
     }
 }
 

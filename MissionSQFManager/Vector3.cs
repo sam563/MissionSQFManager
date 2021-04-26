@@ -148,7 +148,6 @@ namespace MissionSQFManager
             }
             else
             {
-                Trace.WriteLine(s);
                 Trace.TraceError($"Failed to parse Vector3: z axis {axes[2]} is not a float!");
                 return false;
             }

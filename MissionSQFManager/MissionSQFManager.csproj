@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GOToSQMConverter.cs" />
     <Compile Include="Vector3.cs" />
     <Compile Include="SQFMMForm.cs">
       <SubType>Form</SubType>

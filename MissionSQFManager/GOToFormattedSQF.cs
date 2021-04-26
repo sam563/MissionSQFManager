@@ -10,14 +10,23 @@ namespace MissionSQFManager
 {
     public class GOToFormattedSQF
     {
-        public static string[] FormatGameObjects(GameObject[] gameObjects)
+        public static bool GetFormatFromConfig(out string format)
+        {
+            format = string.Empty;
+            if (!Utils.GetConfigXML(out XmlDocument xmlDoc)) return false;
+
+            format = xmlDoc.GetElementsByTagName("Format")[0].InnerText;
+            return true;
+        }
+
+        public static string[] FormatGameObjects(GameObject[] gameObjects, string format)
         {
             string[] formattedArray = new string[gameObjects.Length];
 
-            if (!Utils.GetConfigXML(out XmlDocument xmlDoc)) return formattedArray;
-
-            XmlNodeList Clist = xmlDoc.GetElementsByTagName("Format");
-
+            if (string.IsNullOrEmpty(format))
+            {
+                if (!GetFormatFromConfig(out format)) return null;
+            }
 
             for (int i = 0; i < gameObjects.Length; i++)
             {
@@ -25,12 +34,27 @@ namespace MissionSQFManager
 
                 if (gameObject == null) System.Diagnostics.Trace.TraceError($"Game object at index {i} was null!");
 
-                string comma = (i < gameObjects.Length) ? "," : "";
+                string comma = (i >= (gameObjects.Length - 1)) ? "" : ",";
                 string isInit = (!string.IsNullOrEmpty(gameObject.init)) ? "true" : "false";
-                formattedArray[i] = string.Format(Clist[0].InnerText, $"\"{gameObject.className}\"", $"[{gameObject.position}]", gameObject.direction, $"\"{gameObject.init}\"", isInit, comma);
+
+                formattedArray[i] = Format(format, $"\"{gameObject.className}\"", $"[{gameObject.position}]", gameObject.direction, $"\"{gameObject.init}\"", isInit, comma);
             }
 
             return formattedArray;
+        }
+
+        private static string Format(string format, params object[] args)
+        {
+            char magicChar = '%';
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                string replace = string.Concat(magicChar, i);
+
+                format = format.Replace(replace, args[i].ToString());
+            }
+
+            return format;
         }
     }
 }

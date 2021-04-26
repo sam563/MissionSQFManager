@@ -20,40 +20,35 @@ namespace MissionSQFManager
 
             previewModeDropDown.Text = previewModeDropDown.Items[0].ToString();
             outputFormatDropDown.Text = outputFormatDropDown.Items[0].ToString();
+
+            if (GOToFormattedSQF.GetFormatFromConfig(out string format)) formatInputBox.Text = format;
         }
 
         private void UpdatePreviewer(GameObject[] gameObjects)
         {
+            bool isFormattedSQF = (outputFormatDropDown.SelectedIndex == 0);
+            formatInputBox.Enabled = isFormattedSQF;
+            formatHelpBox.Visible = isFormattedSQF;
+
             if (gameObjects == null || gameObjects.Length <= 0)
             {
                 objectCounter.Text = "No objects loaded";
                 return;
             }
 
-            if (replaceClassnames.Checked)
-            {
-                gameObjects = GOClassNameCorrector.ReplaceClassnamesFromConfig(gameObjects);
-            }
-
-            var objList = gameObjects.ToList();
-            if (sortByNamesCheckBox.Checked)
-            {
-                objList.Sort((x, y) => string.Compare(x.className, y.className));
-            }
-
             objectsList.Items.Clear();
             if (previewModeDropDown.SelectedIndex == 0)
             {
                 //Formatted object data
-                objectsList.Items.AddRange(GOToLines(objList.ToArray()));
+                objectsList.Items.AddRange(GOToLines(gameObjects));
             }
             else
             {
                 //Raw object data
-                objectsList.Items.AddRange(objList.ToArray());
+                objectsList.Items.AddRange(gameObjects);
             }
 
-            objectCounter.Text = $"{objList.Count} objects loaded";
+            objectCounter.Text = $"{gameObjects.Length} objects loaded";
         }
 
         private void OpenFileButtonClick(object sender, EventArgs e)
@@ -100,16 +95,32 @@ namespace MissionSQFManager
 
             string[] lines;
 
+            if (replaceClassnames.Checked)
+            {
+                gameObjects = GOClassNameCorrector.ReplaceClassnamesFromConfig(gameObjects);
+            }
+
+            var objList = gameObjects.ToList();
+            if (sortByNamesCheckBox.Checked)
+            {
+                objList.Sort((x, y) => string.Compare(x.className, y.className));
+            }
+
             switch (outputFormatDropDown.SelectedIndex)
             {
                 case 1:
                     //Biedi
-                    lines = GOToBiediConverter.GOToBiedi(gameObjects);
+                    lines = GOToBiediConverter.GOToBiedi(objList.ToArray());
                     extention = ".biedi";
+                    break;
+                case 2:
+                    //SQM
+                    lines = GOToSQMConverter.GOToSQM(objList.ToArray());
+                    extention = ".sqm";
                     break;
                 default:
                     //Formatted SQF
-                    lines = GOToFormattedSQF.FormatGameObjects(gameObjects);
+                    lines = GOToFormattedSQF.FormatGameObjects(objList.ToArray(), formatInputBox.Text);
                     extention = ".sqf";
                     break;
             }
@@ -136,8 +147,6 @@ namespace MissionSQFManager
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                Utils.DebugWindow(saveFileDialog.FileName);
-
                 File.WriteAllLines(saveFileDialog.FileName, lines);
             }
            
@@ -146,5 +155,7 @@ namespace MissionSQFManager
         private void SortByNamesCheckBox_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
 
         private void CheckBox1_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
+
+        private void FormatInputBox_TextChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
     }
 }
