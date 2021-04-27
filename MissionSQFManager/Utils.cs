@@ -100,7 +100,7 @@ namespace MissionSQFManager
 
                 for (int j = 1; j < blacklists.Length; j++)
                 {
-                    if (cur == blacklists[i])
+                    if (cur == blacklists[j])
                     {
                         isBlacklisted = true;
                         break;

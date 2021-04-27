@@ -22,6 +22,11 @@ namespace MissionSQFManager
             outputFormatDropDown.Text = outputFormatDropDown.Items[0].ToString();
 
             if (GOToFormattedSQF.GetFormatFromConfig(out string format)) formatInputBox.Text = format;
+
+            sortByClassToolTip.SetToolTip(sortByNamesCheckBox, "Orders objects by their classname alphanumerically.");
+            replaceClassnamesToolTip.SetToolTip(replaceClassnames, "Replaces all classnames as defined in config. (Primarily for replacing MAP objects with their lootable counterparts)");
+            loadFileToolTip.SetToolTip(openFileButton, "Load Arma generated .sqf mission file for the program to read from.");
+            saveFileToolTip.SetToolTip(saveOutputButton, "Save generated output in the selected format.");
         }
 
         private void UpdatePreviewer(GameObject[] gameObjects)
@@ -30,13 +35,19 @@ namespace MissionSQFManager
             formatInputBox.Enabled = isFormattedSQF;
             formatHelpBox.Visible = isFormattedSQF;
 
-            if (gameObjects == null || gameObjects.Length <= 0)
+            objectsList.Items.Clear();
+
+            bool isValid = (gameObjects != null && gameObjects.Length > 0);
+
+            saveOutputButton.Enabled = isValid;
+
+            if (!isValid)
             {
+                fileName.Text = "No file loaded";
                 objectCounter.Text = "No objects loaded";
                 return;
             }
 
-            objectsList.Items.Clear();
             if (previewModeDropDown.SelectedIndex == 0)
             {
                 //Formatted object data
@@ -77,13 +88,28 @@ namespace MissionSQFManager
 
             var gameObjects = SQFToGOConverter.SQFToGameObjects(fileContent);
 
-            bool isValid = gameObjects.Length > 0;
-
             UpdatePreviewer(gameObjects);
+        }
 
-            objectCounter.Visible = isValid;
+        private void SaveButton_Click(object sender, EventArgs e)
+        {
+            if (SQFToGOConverter.GameObjects == null) return;
 
-            saveOutputButton.Enabled = (gameObjects.Length > 0);
+            var lines = GOToLines(SQFToGOConverter.GameObjects, out string extention);
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = string.Format("{0} files (*{0})|*{0}", extention),
+                FilterIndex = 2,
+                RestoreDirectory = true
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                File.WriteAllLines(saveFileDialog.FileName, lines);
+            }
+
+            saveFileDialog.Dispose();
         }
 
         private string[] GOToLines(GameObject[] gameObjects) => GOToLines(gameObjects, out string _);
@@ -101,6 +127,24 @@ namespace MissionSQFManager
             }
 
             var objList = gameObjects.ToList();
+
+            if (discardUnitsCheckBox.Checked || discardVehiclesCheckBox.Checked)
+            {
+                var filtered = new List<GameObject>();
+
+                for (int i = 0; i < objList.Count; i++)
+                {
+                    GameObject go = objList[i];
+                    bool isUnit = (go.type == GameObject.Type.Unit);
+                    bool isVehicle = (go.type == GameObject.Type.Vehicle);
+
+                    if (isUnit && !discardUnitsCheckBox.Checked) filtered.Add(go);
+                    if (isVehicle && !discardVehiclesCheckBox.Checked) filtered.Add(go);
+                }
+
+                objList = filtered;
+            }
+
             if (sortByNamesCheckBox.Checked)
             {
                 objList.Sort((x, y) => string.Compare(x.className, y.className));
@@ -132,30 +176,14 @@ namespace MissionSQFManager
 
         private void OutputFormatDropDown_SelectedIndexChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
 
-        private void Button1_Click(object sender, EventArgs e)
-        {
-            if (SQFToGOConverter.GameObjects == null) return;
-
-            var lines = GOToLines(SQFToGOConverter.GameObjects, out string extention);
-
-            SaveFileDialog saveFileDialog = new SaveFileDialog
-            {
-                Filter = string.Format("{0} files (*{0})|*{0}", extention),
-                FilterIndex = 2,
-                RestoreDirectory = true
-            };
-
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                File.WriteAllLines(saveFileDialog.FileName, lines);
-            }
-           
-        }
-
         private void SortByNamesCheckBox_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
 
-        private void CheckBox1_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
+        private void ReplaceNames_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
 
         private void FormatInputBox_TextChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
+
+        private void DiscardUnitsCheckBox_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
+
+        private void DiscardVehiclesCheckBox_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
     }
 }

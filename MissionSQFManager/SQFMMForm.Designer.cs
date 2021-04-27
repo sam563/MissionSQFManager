@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SQFMMForm));
             this.openFileButton = new System.Windows.Forms.Button();
             this.objectsList = new System.Windows.Forms.ListBox();
@@ -43,6 +44,12 @@
             this.formatInputBox = new System.Windows.Forms.TextBox();
             this.formatLabel = new System.Windows.Forms.Label();
             this.formatHelpBox = new System.Windows.Forms.ListBox();
+            this.sortByClassToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.replaceClassnamesToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.loadFileToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.saveFileToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.discardUnitsCheckBox = new System.Windows.Forms.CheckBox();
+            this.discardVehiclesCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // openFileButton
@@ -140,7 +147,7 @@
             this.saveOutputButton.TabIndex = 8;
             this.saveOutputButton.Text = "Save Output";
             this.saveOutputButton.UseVisualStyleBackColor = false;
-            this.saveOutputButton.Click += new System.EventHandler(this.Button1_Click);
+            this.saveOutputButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
             // sortByNamesCheckBox
             // 
@@ -162,7 +169,7 @@
             this.replaceClassnames.TabIndex = 10;
             this.replaceClassnames.Text = "Replace Class Names From Config";
             this.replaceClassnames.UseVisualStyleBackColor = true;
-            this.replaceClassnames.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
+            this.replaceClassnames.CheckedChanged += new System.EventHandler(this.ReplaceNames_CheckedChanged);
             // 
             // formatInputBox
             // 
@@ -197,11 +204,35 @@
             this.formatHelpBox.Size = new System.Drawing.Size(242, 82);
             this.formatHelpBox.TabIndex = 13;
             // 
+            // discardUnitsCheckBox
+            // 
+            this.discardUnitsCheckBox.AutoSize = true;
+            this.discardUnitsCheckBox.Location = new System.Drawing.Point(904, 562);
+            this.discardUnitsCheckBox.Name = "discardUnitsCheckBox";
+            this.discardUnitsCheckBox.Size = new System.Drawing.Size(89, 17);
+            this.discardUnitsCheckBox.TabIndex = 14;
+            this.discardUnitsCheckBox.Text = "Discard Units";
+            this.discardUnitsCheckBox.UseVisualStyleBackColor = true;
+            this.discardUnitsCheckBox.CheckedChanged += new System.EventHandler(this.DiscardUnitsCheckBox_CheckedChanged);
+            // 
+            // discardVehiclesCheckBox
+            // 
+            this.discardVehiclesCheckBox.AutoSize = true;
+            this.discardVehiclesCheckBox.Location = new System.Drawing.Point(904, 585);
+            this.discardVehiclesCheckBox.Name = "discardVehiclesCheckBox";
+            this.discardVehiclesCheckBox.Size = new System.Drawing.Size(105, 17);
+            this.discardVehiclesCheckBox.TabIndex = 15;
+            this.discardVehiclesCheckBox.Text = "Discard Vehicles";
+            this.discardVehiclesCheckBox.UseVisualStyleBackColor = true;
+            this.discardVehiclesCheckBox.CheckedChanged += new System.EventHandler(this.DiscardVehiclesCheckBox_CheckedChanged);
+            // 
             // SQFMMForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1147, 694);
+            this.Controls.Add(this.discardVehiclesCheckBox);
+            this.Controls.Add(this.discardUnitsCheckBox);
             this.Controls.Add(this.formatHelpBox);
             this.Controls.Add(this.formatLabel);
             this.Controls.Add(this.formatInputBox);
@@ -240,6 +271,12 @@
         private System.Windows.Forms.TextBox formatInputBox;
         private System.Windows.Forms.Label formatLabel;
         private System.Windows.Forms.ListBox formatHelpBox;
+        private System.Windows.Forms.ToolTip sortByClassToolTip;
+        private System.Windows.Forms.ToolTip replaceClassnamesToolTip;
+        private System.Windows.Forms.ToolTip loadFileToolTip;
+        private System.Windows.Forms.ToolTip saveFileToolTip;
+        private System.Windows.Forms.CheckBox discardUnitsCheckBox;
+        private System.Windows.Forms.CheckBox discardVehiclesCheckBox;
     }
 }
 

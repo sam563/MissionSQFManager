@@ -158,22 +158,33 @@ namespace MissionSQFManager
                     }
                 }
 
-                if (char.IsDigit(cur) && !char.IsDigit(file[i + 1])) //Are we looking at the end of a number?
-                {
-                    //Rule out the posibility of it being a number in a position vector
-                    if (Utils.FindNextChar(file, i, out nextChar, ' '))
-                    {
-                        if (nextChar == ',') continue;
-                    }
-                    
-                    int j;
-                    for (j = i; j >= 0; j--)
-                    {
-                        if (!char.IsDigit(file[j]) && file[j] != '.') break;
-                    }
+                //char[] numberChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-', 'e' };
 
-                    //Now make sure there is no comma that comes directly before it.
-                }
+                //if (char.IsDigit(cur) && !numberChars.Contains(file[i + 1])) //Are we looking at the end of a number?
+                //{
+                //    if (Utils.FindPreviousChar(file, i, out int startNum, numberChars))
+                //    {
+                //        startNum++;
+
+                //        //charPos now at start of number...
+                //        if (Utils.FindPreviousChar(file, startNum, out int charPos, ' '))
+                //        {
+                //            string dir = "setDir";
+
+                //            var s = file.Substring((charPos - dir.Length) + 1, dir.Length);
+                //            Trace.WriteLine(s);
+
+                //            if (s == dir)
+                //            {
+                //                if (float.TryParse(file.Substring(startNum, (i - startNum)), out float result))
+                //                {
+                //                    gameObject.direction = result;
+                //                    CheckSetStartPoint("Direction");
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
             }
 
             var goArr = gameObjects.ToArray();
