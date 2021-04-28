@@ -17,7 +17,7 @@ namespace MissionSQFManager
                     {
                         $"		class Item{index}",
                         "		{",
-                        $"			position[]={{{go.position}}};",
+                        $"			position[]={{{go.position.x},{go.position.z},{go.position.y}}};",
                         $"			azimut=-{go.direction};",
                         $"			id={index};",
                         $"			side=\"EMPTY\";",

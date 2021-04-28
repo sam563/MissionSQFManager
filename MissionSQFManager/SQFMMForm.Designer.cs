@@ -196,7 +196,7 @@
             "%1 Position",
             "%2 Direction",
             "%3 Init",
-            "%4 Has Init (bool: if has init true, no init false)",
+            "%4 Has Init (bool: has init = true, no init = false)",
             "%5 Comma (Applies to all entries but last)"});
             this.formatHelpBox.Location = new System.Drawing.Point(501, 43);
             this.formatHelpBox.Name = "formatHelpBox";

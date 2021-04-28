@@ -56,7 +56,7 @@ namespace MissionSQFManager
             else
             {
                 //Raw object data
-                objectsList.Items.AddRange(gameObjects);
+                objectsList.Items.AddRange(SQFToGOConverter.GameObjects);
             }
 
             objectCounter.Text = $"{gameObjects.Length} objects loaded";
