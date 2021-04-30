@@ -56,20 +56,12 @@
             this.suffixLineLabel = new System.Windows.Forms.Label();
             this.indentsLabel = new System.Windows.Forms.Label();
             this.indentsNumBox = new System.Windows.Forms.NumericUpDown();
-            this.relativeXLabel = new System.Windows.Forms.Label();
-            this.relativeYLabel = new System.Windows.Forms.Label();
-            this.relativeZLabel = new System.Windows.Forms.Label();
             this.relativePosCheckBox = new System.Windows.Forms.CheckBox();
-            this.relativeXNumeric = new System.Windows.Forms.NumericUpDown();
-            this.relativeYNumeric = new System.Windows.Forms.NumericUpDown();
-            this.relativeZNumeric = new System.Windows.Forms.NumericUpDown();
             this.objectPerLinesCheckBox = new System.Windows.Forms.CheckBox();
             this.prefixCheckBox = new System.Windows.Forms.CheckBox();
             this.suffixCheckBox = new System.Windows.Forms.CheckBox();
+            this.relativePosition = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.indentsNumBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.relativeXNumeric)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.relativeYNumeric)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.relativeZNumeric)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileButton
@@ -196,7 +188,7 @@
             // 
             this.formatInputBox.Location = new System.Drawing.Point(653, 73);
             this.formatInputBox.Name = "formatInputBox";
-            this.formatInputBox.Size = new System.Drawing.Size(202, 20);
+            this.formatInputBox.Size = new System.Drawing.Size(226, 20);
             this.formatInputBox.TabIndex = 11;
             this.formatInputBox.TextChanged += new System.EventHandler(this.Format_TextChanged);
             // 
@@ -302,33 +294,6 @@
             this.indentsNumBox.TabIndex = 22;
             this.indentsNumBox.ValueChanged += new System.EventHandler(this.Indents_ValueChanged);
             // 
-            // relativeXLabel
-            // 
-            this.relativeXLabel.AutoSize = true;
-            this.relativeXLabel.Location = new System.Drawing.Point(575, 606);
-            this.relativeXLabel.Name = "relativeXLabel";
-            this.relativeXLabel.Size = new System.Drawing.Size(14, 13);
-            this.relativeXLabel.TabIndex = 24;
-            this.relativeXLabel.Text = "X";
-            // 
-            // relativeYLabel
-            // 
-            this.relativeYLabel.AutoSize = true;
-            this.relativeYLabel.Location = new System.Drawing.Point(674, 606);
-            this.relativeYLabel.Name = "relativeYLabel";
-            this.relativeYLabel.Size = new System.Drawing.Size(14, 13);
-            this.relativeYLabel.TabIndex = 26;
-            this.relativeYLabel.Text = "Y";
-            // 
-            // relativeZLabel
-            // 
-            this.relativeZLabel.AutoSize = true;
-            this.relativeZLabel.Location = new System.Drawing.Point(768, 606);
-            this.relativeZLabel.Name = "relativeZLabel";
-            this.relativeZLabel.Size = new System.Drawing.Size(14, 13);
-            this.relativeZLabel.TabIndex = 28;
-            this.relativeZLabel.Text = "Z";
-            // 
             // relativePosCheckBox
             // 
             this.relativePosCheckBox.AutoSize = true;
@@ -339,63 +304,6 @@
             this.relativePosCheckBox.Text = "Positions Relative To";
             this.relativePosCheckBox.UseVisualStyleBackColor = true;
             this.relativePosCheckBox.CheckedChanged += new System.EventHandler(this.RelativePos_CheckedChanged);
-            // 
-            // relativeXNumeric
-            // 
-            this.relativeXNumeric.DecimalPlaces = 5;
-            this.relativeXNumeric.Location = new System.Drawing.Point(595, 603);
-            this.relativeXNumeric.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.relativeXNumeric.Minimum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            -2147483648});
-            this.relativeXNumeric.Name = "relativeXNumeric";
-            this.relativeXNumeric.Size = new System.Drawing.Size(64, 20);
-            this.relativeXNumeric.TabIndex = 30;
-            this.relativeXNumeric.ValueChanged += new System.EventHandler(this.RelativeX_ValueChanged);
-            // 
-            // relativeYNumeric
-            // 
-            this.relativeYNumeric.DecimalPlaces = 5;
-            this.relativeYNumeric.Location = new System.Drawing.Point(694, 603);
-            this.relativeYNumeric.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.relativeYNumeric.Minimum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            -2147483648});
-            this.relativeYNumeric.Name = "relativeYNumeric";
-            this.relativeYNumeric.Size = new System.Drawing.Size(64, 20);
-            this.relativeYNumeric.TabIndex = 31;
-            this.relativeYNumeric.ValueChanged += new System.EventHandler(this.RelativeY_ValueChanged);
-            // 
-            // relativeZNumeric
-            // 
-            this.relativeZNumeric.DecimalPlaces = 5;
-            this.relativeZNumeric.Location = new System.Drawing.Point(788, 603);
-            this.relativeZNumeric.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.relativeZNumeric.Minimum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            -2147483648});
-            this.relativeZNumeric.Name = "relativeZNumeric";
-            this.relativeZNumeric.Size = new System.Drawing.Size(64, 20);
-            this.relativeZNumeric.TabIndex = 32;
-            this.relativeZNumeric.ValueChanged += new System.EventHandler(this.RelativeZ_ValueChanged);
             // 
             // objectPerLinesCheckBox
             // 
@@ -436,21 +344,24 @@
             this.suffixCheckBox.UseVisualStyleBackColor = true;
             this.suffixCheckBox.CheckedChanged += new System.EventHandler(this.Suffix_CheckedChanged);
             // 
+            // relativePosition
+            // 
+            this.relativePosition.Location = new System.Drawing.Point(576, 602);
+            this.relativePosition.Name = "relativePosition";
+            this.relativePosition.Size = new System.Drawing.Size(226, 20);
+            this.relativePosition.TabIndex = 36;
+            this.relativePosition.TextChanged += new System.EventHandler(this.RelativePosition_TextChanged);
+            // 
             // SQFMMForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1147, 670);
+            this.Controls.Add(this.relativePosition);
             this.Controls.Add(this.suffixCheckBox);
             this.Controls.Add(this.prefixCheckBox);
             this.Controls.Add(this.objectPerLinesCheckBox);
-            this.Controls.Add(this.relativeZNumeric);
-            this.Controls.Add(this.relativeYNumeric);
-            this.Controls.Add(this.relativeXNumeric);
             this.Controls.Add(this.relativePosCheckBox);
-            this.Controls.Add(this.relativeZLabel);
-            this.Controls.Add(this.relativeYLabel);
-            this.Controls.Add(this.relativeXLabel);
             this.Controls.Add(this.indentsNumBox);
             this.Controls.Add(this.indentsLabel);
             this.Controls.Add(this.suffixLineLabel);
@@ -477,9 +388,6 @@
             this.Name = "SQFMMForm";
             this.Text = "SQF Mission Manager";
             ((System.ComponentModel.ISupportInitialize)(this.indentsNumBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.relativeXNumeric)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.relativeYNumeric)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.relativeZNumeric)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -513,16 +421,11 @@
         private System.Windows.Forms.Label suffixLineLabel;
         private System.Windows.Forms.Label indentsLabel;
         private System.Windows.Forms.NumericUpDown indentsNumBox;
-        private System.Windows.Forms.Label relativeXLabel;
-        private System.Windows.Forms.Label relativeYLabel;
-        private System.Windows.Forms.Label relativeZLabel;
         private System.Windows.Forms.CheckBox relativePosCheckBox;
-        private System.Windows.Forms.NumericUpDown relativeXNumeric;
-        private System.Windows.Forms.NumericUpDown relativeYNumeric;
-        private System.Windows.Forms.NumericUpDown relativeZNumeric;
         private System.Windows.Forms.CheckBox objectPerLinesCheckBox;
         private System.Windows.Forms.CheckBox prefixCheckBox;
         private System.Windows.Forms.CheckBox suffixCheckBox;
+        private System.Windows.Forms.TextBox relativePosition;
     }
 }
 

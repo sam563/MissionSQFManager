@@ -152,10 +152,13 @@ namespace MissionSQFManager
             //Convert to relative positions
             if (relativePosCheckBox.Checked)
             {
+                Vector3.TryParse(relativePosition.Text, out Vector3 relativePos);
+
                 for (int i = 0; i < objList.Count; i++)
                 {
                     var go = GameObject.Copy(objList[i]);
-                    go.position -= new Vector3((float)relativeXNumeric.Value, (float)relativeYNumeric.Value, (float)relativeZNumeric.Value);
+
+                    go.position -= relativePos;
                     objList[i] = go;
                 }
             }
@@ -212,10 +215,7 @@ namespace MissionSQFManager
 
         private void SetRelativeInputFieldsEnabled()
         {
-            bool enabled = relativePosCheckBox.Checked;
-            relativeXNumeric.Enabled = enabled;
-            relativeYNumeric.Enabled = enabled;
-            relativeZNumeric.Enabled = enabled;
+            relativePosition.Enabled = relativePosCheckBox.Checked;
         }
 
         private void PreviewMode_SelectedIndexChanged(object sender, EventArgs e) => UpdatePreviewer();
@@ -251,5 +251,7 @@ namespace MissionSQFManager
         private void Prefix_CheckedChanged(object sender, EventArgs e)  => UpdatePreviewer();
 
         private void Suffix_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
+
+        private void RelativePosition_TextChanged(object sender, EventArgs e) => UpdatePreviewer();
     }
 }
