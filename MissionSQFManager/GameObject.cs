@@ -51,7 +51,7 @@ namespace MissionSQFManager
 
         public override string ToString()
         {
-            string init = !string.IsNullOrEmpty(this.init) ? $", Init: {this.init}" : "";
+            string init = !string.IsNullOrEmpty(this.init) ? $", Init: \"{this.init}\"" : "";
             return $"Type: {type},  Classname: {className},  Position: [{position}], Direction: {direction}{init}";
         }
     }

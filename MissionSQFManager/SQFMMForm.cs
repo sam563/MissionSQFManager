@@ -21,7 +21,11 @@ namespace MissionSQFManager
             previewModeDropDown.Text = previewModeDropDown.Items[0].ToString();
             outputFormatDropDown.Text = outputFormatDropDown.Items[0].ToString();
 
-            if (GOToFormattedSQF.GetFormatFromConfig(out string format)) formatInputBox.Text = format;
+            //Load presets from config
+            if (Utils.GetElementFromConfig("Format", out string format)) formatInputBox.Text = format;
+            if (Utils.GetElementFromConfig("Prefix", out string prefix)) prefixLineInputBox.Text = prefix;
+            if (Utils.GetElementFromConfig("Suffix", out string suffix)) suffixLineInputBox.Text = suffix;
+            if (Utils.GetElementFromConfig("Indents", out string indents) && int.TryParse(indents, out int intdent)) indentsNumBox.Value = intdent;
 
             sortByClassToolTip.SetToolTip(sortByNamesCheckBox, "Orders objects by their classname alphanumerically.");
             replaceClassnamesToolTip.SetToolTip(replaceClassnames, "Replaces all classnames as defined in config. (Primarily for replacing MAP objects with their lootable counterparts)");
@@ -29,10 +33,15 @@ namespace MissionSQFManager
             saveFileToolTip.SetToolTip(saveOutputButton, "Save generated output in the selected format.");
         }
 
-        private void UpdatePreviewer(GameObject[] gameObjects)
+        private void UpdatePreviewer()
         {
+            var gameObjects = SQFToGOConverter.GameObjects;
+
             bool isFormattedSQF = (outputFormatDropDown.SelectedIndex == 0);
             formatInputBox.Enabled = isFormattedSQF;
+            prefixLineInputBox.Enabled = isFormattedSQF;
+            suffixLineInputBox.Enabled = isFormattedSQF;
+            indentsNumBox.Enabled = isFormattedSQF;
             formatHelpBox.Visible = isFormattedSQF;
 
             objectsList.Items.Clear();
@@ -51,7 +60,9 @@ namespace MissionSQFManager
             if (previewModeDropDown.SelectedIndex == 0)
             {
                 //Formatted object data
-                objectsList.Items.AddRange(GOToLines(gameObjects));
+                var output = GOToOutput(gameObjects);
+                if (output == null) return;
+                objectsList.Items.AddRange(GOToOutput(gameObjects));
             }
             else
             {
@@ -86,16 +97,16 @@ namespace MissionSQFManager
                 }
             }
 
-            var gameObjects = SQFToGOConverter.SQFToGameObjects(fileContent);
+            SQFToGOConverter.SQFToGameObjects(fileContent);
 
-            UpdatePreviewer(gameObjects);
+            UpdatePreviewer();
         }
 
-        private void SaveButton_Click(object sender, EventArgs e)
+        private void Save_Click(object sender, EventArgs e)
         {
             if (SQFToGOConverter.GameObjects == null) return;
 
-            var lines = GOToLines(SQFToGOConverter.GameObjects, out string extention);
+            var lines = GOToOutput(SQFToGOConverter.GameObjects, out string extention);
 
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
@@ -112,9 +123,9 @@ namespace MissionSQFManager
             saveFileDialog.Dispose();
         }
 
-        private string[] GOToLines(GameObject[] gameObjects) => GOToLines(gameObjects, out string _);
+        private string[] GOToOutput(GameObject[] gameObjects) => GOToOutput(gameObjects, out string _);
 
-        private string[] GOToLines(GameObject[] gameObjects, out string extention)
+        private string[] GOToOutput(GameObject[] gameObjects, out string extention)
         {
             extention = string.Empty;
             if (gameObjects == null) return null;
@@ -123,7 +134,7 @@ namespace MissionSQFManager
 
             if (replaceClassnames.Checked)
             {
-                gameObjects = GOClassNameCorrector.ReplaceClassnamesFromConfig(gameObjects);
+                gameObjects = GOClassNameReplacer.ReplaceClassnamesFromConfig(gameObjects);
             }
 
             var objList = gameObjects.ToList();
@@ -164,7 +175,12 @@ namespace MissionSQFManager
                     break;
                 default:
                     //Formatted SQF
-                    lines = GOToFormattedSQF.FormatGameObjects(objList.ToArray(), formatInputBox.Text);
+                    lines = GOToFormattedSQF.FormatGameObjects(objList.ToArray(), formatInputBox.Text, (int)indentsNumBox.Value);
+                    if (lines == null) return null;
+                    var lineList = lines.ToList();
+                    if (!string.IsNullOrEmpty(prefixLineInputBox.Text)) lineList.Insert(0, prefixLineInputBox.Text);
+                    if (!string.IsNullOrEmpty(suffixLineInputBox.Text)) lineList.Add(suffixLineInputBox.Text);
+                    lines = lineList.ToArray();
                     extention = ".sqf";
                     break;
             }
@@ -172,18 +188,24 @@ namespace MissionSQFManager
             return lines;
         }
 
-        private void PreviewModeDropDown_SelectedIndexChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
+        private void PreviewMode_SelectedIndexChanged(object sender, EventArgs e) => UpdatePreviewer();
 
-        private void OutputFormatDropDown_SelectedIndexChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
+        private void OutputFormat_SelectedIndexChanged(object sender, EventArgs e) => UpdatePreviewer();
 
-        private void SortByNamesCheckBox_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
+        private void SortByNames_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
 
-        private void ReplaceNames_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
+        private void ReplaceNames_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
 
-        private void FormatInputBox_TextChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
+        private void Format_TextChanged(object sender, EventArgs e) => UpdatePreviewer();
 
-        private void DiscardUnitsCheckBox_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
+        private void DiscardUnits_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
 
-        private void DiscardVehiclesCheckBox_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer(SQFToGOConverter.GameObjects);
+        private void DiscardVehicles_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
+
+        private void SuffixLine_TextChanged(object sender, EventArgs e) => UpdatePreviewer();
+
+        private void PrefixLine_TextChanged(object sender, EventArgs e) => UpdatePreviewer();
+
+        private void Indents_ValueChanged(object sender, EventArgs e) => UpdatePreviewer();
     }
 }

@@ -10,22 +10,17 @@ namespace MissionSQFManager
 {
     public class GOToFormattedSQF
     {
-        public static bool GetFormatFromConfig(out string format)
-        {
-            format = string.Empty;
-            if (!Utils.GetConfigXML(out XmlDocument xmlDoc)) return false;
-
-            format = xmlDoc.GetElementsByTagName("Format")[0].InnerText;
-            return true;
-        }
-
-        public static string[] FormatGameObjects(GameObject[] gameObjects, string format)
+        public static string[] FormatGameObjects(GameObject[] gameObjects, string format, int indentations)
         {
             string[] formattedArray = new string[gameObjects.Length];
 
-            if (string.IsNullOrEmpty(format))
+            if (string.IsNullOrEmpty(format)) return null;
+
+            string indents = string.Empty;
+
+            for (int i = 0; i < indentations; i++)
             {
-                if (!GetFormatFromConfig(out format)) return null;
+                indents += "   ";
             }
 
             for (int i = 0; i < gameObjects.Length; i++)
@@ -37,7 +32,7 @@ namespace MissionSQFManager
                 string comma = (i >= (gameObjects.Length - 1)) ? "" : ",";
                 string isInit = (!string.IsNullOrEmpty(gameObject.init)) ? "true" : "false";
 
-                formattedArray[i] = Format(format, $"\"{gameObject.className}\"", $"[{gameObject.position}]", gameObject.direction, $"\"{gameObject.init}\"", isInit, comma);
+                formattedArray[i] = Format($"{indents}{format}", $"\"{gameObject.className}\"", $"[{gameObject.position}]", gameObject.direction, $"\"{gameObject.init}\"", isInit, comma);
             }
 
             return formattedArray;

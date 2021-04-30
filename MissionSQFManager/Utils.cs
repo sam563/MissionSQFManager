@@ -15,6 +15,15 @@ namespace MissionSQFManager
             System.Windows.Forms.MessageBox.Show(msg.ToString(), "Debug");
         }
 
+        public static bool GetElementFromConfig(string elementTag, out string result)
+        {
+            result = string.Empty;
+            if (!GetConfigXML(out XmlDocument xmlDoc)) return false;
+            result = xmlDoc.GetElementsByTagName(elementTag)[0].InnerText;
+
+            return true;
+        }
+
         public static bool GetConfigXML(out XmlDocument xmlDoc)
         {
             xmlDoc = new XmlDocument();

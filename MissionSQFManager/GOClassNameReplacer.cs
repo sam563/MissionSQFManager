@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace MissionSQFManager
 {
-    class GOClassNameCorrector
+    class GOClassNameReplacer
     {
         class ClassNames
         {
@@ -26,7 +26,7 @@ namespace MissionSQFManager
         {
             var result = new GameObject[gameObjects.Length];
 
-            if (!GetClassNamesFromXML(out var classnames)) return gameObjects;
+            if (!GetReplacementClassNamesFromConfig(out var classnames)) return gameObjects;
 
             for (int i = 0; i < gameObjects.Length; i++)
             {
@@ -41,7 +41,7 @@ namespace MissionSQFManager
             return result;
         }
 
-        private static bool GetClassNamesFromXML(out ClassNames[] classnames)
+        private static bool GetReplacementClassNamesFromConfig(out ClassNames[] classnames)
         {
             classnames = null;
 

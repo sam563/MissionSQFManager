@@ -23,10 +23,7 @@ namespace MissionSQFManager
 
             string flag = string.Empty;
 
-            int openQuotePos = -1;
-            int openInitPos = -1;
-            int openPositionPos = -1;
-            int dirStart = -1;
+            int startPos = -1;
 
             for (int i = 0; i < file.Length; i++)
             {
@@ -62,16 +59,16 @@ namespace MissionSQFManager
 
                 if (flag == "type" && cur == '"')
                 {
-                    openQuotePos = i;
+                    startPos = i;
                     flag = "classnameOpen";
                     continue;
                 }
 
                 if (flag == "classnameOpen" && cur == '"')
                 {
-                    int textStart = openQuotePos + 1;
+                    int textStart = startPos + 1;
 
-                    int textLength = ((i - openQuotePos) - 1);
+                    int textLength = ((i - startPos) - 1);
                     gameObject.className = file.Substring(textStart, textLength);
                     flag = "classnameClose";
                     continue;
@@ -80,20 +77,20 @@ namespace MissionSQFManager
                 
                 if (flag == "classnameClose" && cur == '[')
                 {
-                    openPositionPos = i;
+                    startPos = i;
                     flag = "positionOpen";
                     continue;
                 }
 
                 if (flag == "positionOpen" && cur == ']')
                 {
-                    string position = file.Substring((openPositionPos + 1), (i - (openPositionPos + 1)));
+                    string position = file.Substring((startPos + 1), (i - (startPos + 1)));
 
                     if (Vector3.TryParse(position, out Vector3 result))
                     {
                         gameObject.position = result;
                         flag = "positionClose";
-                        openPositionPos = -1;
+                        startPos = -1;
                         continue;
                     }
                 }
@@ -111,20 +108,20 @@ namespace MissionSQFManager
                     }
                 }
 
-                if (flag == "setDir" && dirStart < 0 && char.IsDigit(cur))
+                if (flag == "setDir" && startPos < 0 && (char.IsDigit(cur) || cur == '-'))
                 {
-                    dirStart = i;
+                    startPos = i;
                     flag = "startDirection";
                     continue;
                 }
 
-                if (flag == "startDirection" && dirStart > 0 && cur == ';')
+                if (flag == "startDirection" && startPos > 0 && cur == ';')
                 {
-                    string s = file.Substring(dirStart, i - dirStart);
+                    string s = file.Substring(startPos, i - startPos);
                     if (float.TryParse(s, out float dir))
                     {
                         gameObject.direction = dir;
-                        dirStart = -1;
+                        startPos = -1;
                         flag = "endDirection";
                     }
                 }
@@ -143,19 +140,21 @@ namespace MissionSQFManager
                     }
                 }
                 
-                if (flag == "init" && openInitPos < 0 && cur == '"')
+                if (flag == "init" && cur == '"')
                 {
-                    openInitPos = i;
+                    startPos = i;
+                    flag = "initClose";
                     continue;
                 }
 
-                if (flag == "init" && openInitPos > 0 && cur == '"')
+                
+                if (flag == "initClose" && cur == ';')
                 {
-                    string s = file.Substring((openInitPos + 1), (i - 1) - openInitPos);
-
+                    string s = file.Substring((startPos + 1), (i - startPos));
                     gameObject.init = s;
 
-                    openInitPos = -1;
+                    flag = string.Empty;
+                    startPos = -1;
 
                     continue;
                 }

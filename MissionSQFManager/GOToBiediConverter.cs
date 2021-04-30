@@ -11,15 +11,12 @@ namespace MissionSQFManager
     {
         public static string[] GOToBiedi(GameObject[] gameObjects)
         {
-            string[] GetObjectLines(int index, GameObject go)
+            List<string> GetObjectLines(int index, GameObject go)
             {
-                string[] result;
-
                 string type = ((go.type == GameObject.Type.Unit) ? "unit" : "vehicle");
 
-                if (!string.IsNullOrEmpty(go.init))
-                {
-                    result = new string[]
+                List<string> result = new List<string>(
+                    new string[]
                     {
                         $"class _{type}_{index}",
                         "{",
@@ -29,29 +26,19 @@ namespace MissionSQFManager
                         $"		POSITION=[{go.position}];",
                         $"		TYPE=\"{go.className}\";",
                         $"		AZIMUT={go.direction};",
-                        $"		INIT =\"{go.init}\";",
-                        "		PARENT=\"\";",
-                        "    };",
-                        "};"
-                    };
-                }
-                else
-                {
-                    result = new string[]
+                    }
+                );
+
+                if (!string.IsNullOrEmpty(go.init)) result.Add($"		INIT =\"{go.init}\";");
+
+                result.AddRange(
+                    new string[]
                     {
-                        $"class _{type}_{index}",
-                        "{",
-                        $"    objectType=\"{type}\";",
-                        "    class Arguments",
-                        "    {",
-                        $"		POSITION=[{go.position}];",
-                        $"		TYPE=\"{go.className}\";",
-                        $"		AZIMUT={go.direction};",
                         "		PARENT=\"\";",
                         "    };",
                         "};"
-                    };
-                }
+                    }
+                );
 
                 return result;
             }
