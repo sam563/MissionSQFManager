@@ -20,6 +20,9 @@ namespace MissionSQFManager
         public float y;
         public float z;
 
+        public static readonly Vector3 zero = new Vector3(0, 0, 0);
+        public static readonly Vector3 one = new Vector3(1, 1, 1);
+
         public static Vector3 operator+ (Vector3 a, Vector3 b)
         {
             var result = new Vector3

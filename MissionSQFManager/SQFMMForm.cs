@@ -18,15 +18,20 @@ namespace MissionSQFManager
         {
             InitializeComponent();
 
-            previewModeDropDown.Text = previewModeDropDown.Items[0].ToString();
-            outputFormatDropDown.Text = outputFormatDropDown.Items[0].ToString();
-
             //Load presets from config
             if (Utils.GetElementFromConfig("Format", out string format)) formatInputBox.Text = format;
             if (Utils.GetElementFromConfig("Prefix", out string prefix)) prefixLineInputBox.Text = prefix;
             if (Utils.GetElementFromConfig("Suffix", out string suffix)) suffixLineInputBox.Text = suffix;
             if (Utils.GetElementFromConfig("Indents", out string indents) && int.TryParse(indents, out int intdent)) indentsNumBox.Value = intdent;
 
+            //Set default values for drop downs
+            previewModeDropDown.Text = previewModeDropDown.Items[0].ToString();
+            outputFormatDropDown.Text = outputFormatDropDown.Items[0].ToString();
+
+            //Make sure relative pos input fields reflect checkbox state on startup
+            SetRelativeInputFieldsEnabled();
+
+            //Tool tips
             sortByClassToolTip.SetToolTip(sortByNamesCheckBox, "Orders objects by their classname alphanumerically.");
             replaceClassnamesToolTip.SetToolTip(replaceClassnames, "Replaces all classnames as defined in config. (Primarily for replacing MAP objects with their lootable counterparts)");
             loadFileToolTip.SetToolTip(openFileButton, "Load Arma generated .sqf mission file for the program to read from.");
@@ -132,6 +137,7 @@ namespace MissionSQFManager
 
             string[] lines;
 
+            //Replace classnames from config file
             if (replaceClassnames.Checked)
             {
                 gameObjects = GOClassNameReplacer.ReplaceClassnamesFromConfig(gameObjects);
@@ -139,6 +145,18 @@ namespace MissionSQFManager
 
             var objList = gameObjects.ToList();
 
+            //Convert to relative positions
+            if (relativePosCheckBox.Checked)
+            {
+                for (int i = 0; i < objList.Count; i++)
+                {
+                    var go = GameObject.Copy(objList[i]);
+                    go.position -= new Vector3((float)relativeXNumeric.Value, (float)relativeYNumeric.Value, (float)relativeZNumeric.Value);
+                    objList[i] = go;
+                }
+            }
+
+            //Discard units or vehicles
             if (discardUnitsCheckBox.Checked || discardVehiclesCheckBox.Checked)
             {
                 var filtered = new List<GameObject>();
@@ -156,11 +174,13 @@ namespace MissionSQFManager
                 objList = filtered;
             }
 
+            //Sort by classname
             if (sortByNamesCheckBox.Checked)
             {
                 objList.Sort((x, y) => string.Compare(x.className, y.className));
             }
 
+            //Get output lines for correct format
             switch (outputFormatDropDown.SelectedIndex)
             {
                 case 1:
@@ -188,6 +208,14 @@ namespace MissionSQFManager
             return lines;
         }
 
+        private void SetRelativeInputFieldsEnabled()
+        {
+            bool enabled = relativePosCheckBox.Checked;
+            relativeXNumeric.Enabled = enabled;
+            relativeYNumeric.Enabled = enabled;
+            relativeZNumeric.Enabled = enabled;
+        }
+
         private void PreviewMode_SelectedIndexChanged(object sender, EventArgs e) => UpdatePreviewer();
 
         private void OutputFormat_SelectedIndexChanged(object sender, EventArgs e) => UpdatePreviewer();
@@ -199,13 +227,21 @@ namespace MissionSQFManager
         private void Format_TextChanged(object sender, EventArgs e) => UpdatePreviewer();
 
         private void DiscardUnits_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
-
         private void DiscardVehicles_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
 
         private void SuffixLine_TextChanged(object sender, EventArgs e) => UpdatePreviewer();
-
         private void PrefixLine_TextChanged(object sender, EventArgs e) => UpdatePreviewer();
 
         private void Indents_ValueChanged(object sender, EventArgs e) => UpdatePreviewer();
+
+        private void RelativePos_CheckedChanged(object sender, EventArgs e)
+        {
+            SetRelativeInputFieldsEnabled();
+            UpdatePreviewer();
+        }
+
+        private void RelativeX_ValueChanged(object sender, EventArgs e) => UpdatePreviewer();
+        private void RelativeY_ValueChanged(object sender, EventArgs e) => UpdatePreviewer();
+        private void RelativeZ_ValueChanged(object sender, EventArgs e) => UpdatePreviewer();
     }
 }
