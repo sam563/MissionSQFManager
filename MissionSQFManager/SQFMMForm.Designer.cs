@@ -63,6 +63,9 @@
             this.relativeXNumeric = new System.Windows.Forms.NumericUpDown();
             this.relativeYNumeric = new System.Windows.Forms.NumericUpDown();
             this.relativeZNumeric = new System.Windows.Forms.NumericUpDown();
+            this.objectPerLinesCheckBox = new System.Windows.Forms.CheckBox();
+            this.prefixCheckBox = new System.Windows.Forms.CheckBox();
+            this.suffixCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.indentsNumBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.relativeXNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.relativeYNumeric)).BeginInit();
@@ -94,7 +97,7 @@
             // objectCounter
             // 
             this.objectCounter.AutoSize = true;
-            this.objectCounter.Location = new System.Drawing.Point(106, 124);
+            this.objectCounter.Location = new System.Drawing.Point(106, 90);
             this.objectCounter.Name = "objectCounter";
             this.objectCounter.Size = new System.Drawing.Size(102, 13);
             this.objectCounter.TabIndex = 2;
@@ -106,7 +109,7 @@
             this.previewModeDropDown.Items.AddRange(new object[] {
             "Output Preview",
             "Raw Object Data"});
-            this.previewModeDropDown.Location = new System.Drawing.Point(187, 615);
+            this.previewModeDropDown.Location = new System.Drawing.Point(205, 623);
             this.previewModeDropDown.Name = "previewModeDropDown";
             this.previewModeDropDown.Size = new System.Drawing.Size(121, 21);
             this.previewModeDropDown.TabIndex = 3;
@@ -120,7 +123,7 @@
             "Formatted SQF",
             "Biedi",
             "SQM"});
-            this.outputFormatDropDown.Location = new System.Drawing.Point(866, 29);
+            this.outputFormatDropDown.Location = new System.Drawing.Point(186, 120);
             this.outputFormatDropDown.Name = "outputFormatDropDown";
             this.outputFormatDropDown.Size = new System.Drawing.Size(142, 21);
             this.outputFormatDropDown.TabIndex = 4;
@@ -129,7 +132,7 @@
             // previewModeLabel
             // 
             this.previewModeLabel.AutoSize = true;
-            this.previewModeLabel.Location = new System.Drawing.Point(106, 618);
+            this.previewModeLabel.Location = new System.Drawing.Point(124, 626);
             this.previewModeLabel.Name = "previewModeLabel";
             this.previewModeLabel.Size = new System.Drawing.Size(75, 13);
             this.previewModeLabel.TabIndex = 5;
@@ -138,7 +141,7 @@
             // outputFormatLabel
             // 
             this.outputFormatLabel.AutoSize = true;
-            this.outputFormatLabel.Location = new System.Drawing.Point(785, 34);
+            this.outputFormatLabel.Location = new System.Drawing.Point(105, 125);
             this.outputFormatLabel.Name = "outputFormatLabel";
             this.outputFormatLabel.Size = new System.Drawing.Size(74, 13);
             this.outputFormatLabel.TabIndex = 6;
@@ -148,7 +151,7 @@
             // 
             this.fileName.AutoSize = true;
             this.fileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fileName.Location = new System.Drawing.Point(106, 101);
+            this.fileName.Location = new System.Drawing.Point(106, 67);
             this.fileName.Name = "fileName";
             this.fileName.Size = new System.Drawing.Size(73, 15);
             this.fileName.TabIndex = 7;
@@ -181,7 +184,7 @@
             // replaceClassnames
             // 
             this.replaceClassnames.AutoSize = true;
-            this.replaceClassnames.Location = new System.Drawing.Point(352, 604);
+            this.replaceClassnames.Location = new System.Drawing.Point(353, 604);
             this.replaceClassnames.Name = "replaceClassnames";
             this.replaceClassnames.Size = new System.Drawing.Size(189, 17);
             this.replaceClassnames.TabIndex = 10;
@@ -208,7 +211,7 @@
             // 
             // formatHelpBox
             // 
-            this.formatHelpBox.BackColor = System.Drawing.SystemColors.Window;
+            this.formatHelpBox.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.formatHelpBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.formatHelpBox.FormattingEnabled = true;
             this.formatHelpBox.Items.AddRange(new object[] {
@@ -218,12 +221,12 @@
             "%3 Init",
             "%4 Has Init (bool: has init = true, no init = false)",
             "%5 Comma (Applies to all entries but last)"});
-            this.formatHelpBox.Location = new System.Drawing.Point(325, 67);
+            this.formatHelpBox.Location = new System.Drawing.Point(352, 67);
             this.formatHelpBox.Margin = new System.Windows.Forms.Padding(10);
             this.formatHelpBox.MultiColumn = true;
             this.formatHelpBox.Name = "formatHelpBox";
             this.formatHelpBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.formatHelpBox.Size = new System.Drawing.Size(246, 78);
+            this.formatHelpBox.Size = new System.Drawing.Size(237, 78);
             this.formatHelpBox.TabIndex = 13;
             // 
             // discardUnitsCheckBox
@@ -252,7 +255,7 @@
             // 
             this.prefixLineInputBox.Location = new System.Drawing.Point(653, 99);
             this.prefixLineInputBox.Name = "prefixLineInputBox";
-            this.prefixLineInputBox.Size = new System.Drawing.Size(355, 20);
+            this.prefixLineInputBox.Size = new System.Drawing.Size(323, 20);
             this.prefixLineInputBox.TabIndex = 16;
             this.prefixLineInputBox.TextChanged += new System.EventHandler(this.PrefixLine_TextChanged);
             // 
@@ -260,7 +263,7 @@
             // 
             this.suffixLineInputBox.Location = new System.Drawing.Point(653, 125);
             this.suffixLineInputBox.Name = "suffixLineInputBox";
-            this.suffixLineInputBox.Size = new System.Drawing.Size(355, 20);
+            this.suffixLineInputBox.Size = new System.Drawing.Size(323, 20);
             this.suffixLineInputBox.TabIndex = 17;
             this.suffixLineInputBox.TextChanged += new System.EventHandler(this.SuffixLine_TextChanged);
             // 
@@ -302,7 +305,7 @@
             // relativeXLabel
             // 
             this.relativeXLabel.AutoSize = true;
-            this.relativeXLabel.Location = new System.Drawing.Point(610, 607);
+            this.relativeXLabel.Location = new System.Drawing.Point(575, 606);
             this.relativeXLabel.Name = "relativeXLabel";
             this.relativeXLabel.Size = new System.Drawing.Size(14, 13);
             this.relativeXLabel.TabIndex = 24;
@@ -311,7 +314,7 @@
             // relativeYLabel
             // 
             this.relativeYLabel.AutoSize = true;
-            this.relativeYLabel.Location = new System.Drawing.Point(709, 607);
+            this.relativeYLabel.Location = new System.Drawing.Point(674, 606);
             this.relativeYLabel.Name = "relativeYLabel";
             this.relativeYLabel.Size = new System.Drawing.Size(14, 13);
             this.relativeYLabel.TabIndex = 26;
@@ -320,7 +323,7 @@
             // relativeZLabel
             // 
             this.relativeZLabel.AutoSize = true;
-            this.relativeZLabel.Location = new System.Drawing.Point(803, 607);
+            this.relativeZLabel.Location = new System.Drawing.Point(768, 606);
             this.relativeZLabel.Name = "relativeZLabel";
             this.relativeZLabel.Size = new System.Drawing.Size(14, 13);
             this.relativeZLabel.TabIndex = 28;
@@ -329,7 +332,7 @@
             // relativePosCheckBox
             // 
             this.relativePosCheckBox.AutoSize = true;
-            this.relativePosCheckBox.Location = new System.Drawing.Point(611, 578);
+            this.relativePosCheckBox.Location = new System.Drawing.Point(576, 577);
             this.relativePosCheckBox.Name = "relativePosCheckBox";
             this.relativePosCheckBox.Size = new System.Drawing.Size(126, 17);
             this.relativePosCheckBox.TabIndex = 29;
@@ -340,7 +343,7 @@
             // relativeXNumeric
             // 
             this.relativeXNumeric.DecimalPlaces = 5;
-            this.relativeXNumeric.Location = new System.Drawing.Point(630, 604);
+            this.relativeXNumeric.Location = new System.Drawing.Point(595, 603);
             this.relativeXNumeric.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -359,7 +362,7 @@
             // relativeYNumeric
             // 
             this.relativeYNumeric.DecimalPlaces = 5;
-            this.relativeYNumeric.Location = new System.Drawing.Point(729, 604);
+            this.relativeYNumeric.Location = new System.Drawing.Point(694, 603);
             this.relativeYNumeric.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -378,7 +381,7 @@
             // relativeZNumeric
             // 
             this.relativeZNumeric.DecimalPlaces = 5;
-            this.relativeZNumeric.Location = new System.Drawing.Point(823, 604);
+            this.relativeZNumeric.Location = new System.Drawing.Point(788, 603);
             this.relativeZNumeric.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -394,11 +397,53 @@
             this.relativeZNumeric.TabIndex = 32;
             this.relativeZNumeric.ValueChanged += new System.EventHandler(this.RelativeZ_ValueChanged);
             // 
+            // objectPerLinesCheckBox
+            // 
+            this.objectPerLinesCheckBox.AutoSize = true;
+            this.objectPerLinesCheckBox.Checked = true;
+            this.objectPerLinesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.objectPerLinesCheckBox.Location = new System.Drawing.Point(653, 34);
+            this.objectPerLinesCheckBox.Name = "objectPerLinesCheckBox";
+            this.objectPerLinesCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.objectPerLinesCheckBox.Size = new System.Drawing.Size(99, 17);
+            this.objectPerLinesCheckBox.TabIndex = 33;
+            this.objectPerLinesCheckBox.Text = "Object Per Line";
+            this.objectPerLinesCheckBox.UseVisualStyleBackColor = true;
+            this.objectPerLinesCheckBox.Visible = false;
+            this.objectPerLinesCheckBox.CheckedChanged += new System.EventHandler(this.ObjectPerLines_CheckedChanged);
+            // 
+            // prefixCheckBox
+            // 
+            this.prefixCheckBox.AutoSize = true;
+            this.prefixCheckBox.Checked = true;
+            this.prefixCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.prefixCheckBox.Location = new System.Drawing.Point(983, 100);
+            this.prefixCheckBox.Name = "prefixCheckBox";
+            this.prefixCheckBox.Size = new System.Drawing.Size(15, 14);
+            this.prefixCheckBox.TabIndex = 34;
+            this.prefixCheckBox.UseVisualStyleBackColor = true;
+            this.prefixCheckBox.CheckedChanged += new System.EventHandler(this.Prefix_CheckedChanged);
+            // 
+            // suffixCheckBox
+            // 
+            this.suffixCheckBox.AutoSize = true;
+            this.suffixCheckBox.Checked = true;
+            this.suffixCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.suffixCheckBox.Location = new System.Drawing.Point(983, 128);
+            this.suffixCheckBox.Name = "suffixCheckBox";
+            this.suffixCheckBox.Size = new System.Drawing.Size(15, 14);
+            this.suffixCheckBox.TabIndex = 35;
+            this.suffixCheckBox.UseVisualStyleBackColor = true;
+            this.suffixCheckBox.CheckedChanged += new System.EventHandler(this.Suffix_CheckedChanged);
+            // 
             // SQFMMForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1147, 670);
+            this.Controls.Add(this.suffixCheckBox);
+            this.Controls.Add(this.prefixCheckBox);
+            this.Controls.Add(this.objectPerLinesCheckBox);
             this.Controls.Add(this.relativeZNumeric);
             this.Controls.Add(this.relativeYNumeric);
             this.Controls.Add(this.relativeXNumeric);
@@ -475,6 +520,9 @@
         private System.Windows.Forms.NumericUpDown relativeXNumeric;
         private System.Windows.Forms.NumericUpDown relativeYNumeric;
         private System.Windows.Forms.NumericUpDown relativeZNumeric;
+        private System.Windows.Forms.CheckBox objectPerLinesCheckBox;
+        private System.Windows.Forms.CheckBox prefixCheckBox;
+        private System.Windows.Forms.CheckBox suffixCheckBox;
     }
 }
 

@@ -44,9 +44,14 @@ namespace MissionSQFManager
 
             bool isFormattedSQF = (outputFormatDropDown.SelectedIndex == 0);
             formatInputBox.Enabled = isFormattedSQF;
-            prefixLineInputBox.Enabled = isFormattedSQF;
-            suffixLineInputBox.Enabled = isFormattedSQF;
             indentsNumBox.Enabled = isFormattedSQF;
+            objectPerLinesCheckBox.Enabled = isFormattedSQF;
+            prefixCheckBox.Enabled = isFormattedSQF;
+            suffixCheckBox.Enabled = isFormattedSQF;
+
+            prefixLineInputBox.Enabled = isFormattedSQF && prefixCheckBox.Checked;
+            suffixLineInputBox.Enabled = isFormattedSQF && suffixCheckBox.Checked;
+
             formatHelpBox.Visible = isFormattedSQF;
 
             objectsList.Items.Clear();
@@ -92,7 +97,6 @@ namespace MissionSQFManager
                 {
                     //Read the contents of the file into a stream
                     var fileStream = openFileDialog.OpenFile();
-
                     using (StreamReader reader = new StreamReader(fileStream))
                     {
                         fileContent = reader.ReadToEnd();
@@ -195,12 +199,10 @@ namespace MissionSQFManager
                     break;
                 default:
                     //Formatted SQF
-                    lines = GOToFormattedSQF.FormatGameObjects(objList.ToArray(), formatInputBox.Text, (int)indentsNumBox.Value);
-                    if (lines == null) return null;
-                    var lineList = lines.ToList();
-                    if (!string.IsNullOrEmpty(prefixLineInputBox.Text)) lineList.Insert(0, prefixLineInputBox.Text);
-                    if (!string.IsNullOrEmpty(suffixLineInputBox.Text)) lineList.Add(suffixLineInputBox.Text);
-                    lines = lineList.ToArray();
+                    string prefix = prefixCheckBox.Checked ? prefixLineInputBox.Text : "";
+                    string suffix = suffixCheckBox.Checked ? suffixLineInputBox.Text : "";
+                    lines = GOToFormattedSQF.FormatGameObjects(objList.ToArray(), formatInputBox.Text, (int)indentsNumBox.Value, prefix, suffix);
+                    if (!objectPerLinesCheckBox.Checked) lines = new string[] { string.Join(null, lines) };
                     extention = ".sqf";
                     break;
             }
@@ -243,5 +245,11 @@ namespace MissionSQFManager
         private void RelativeX_ValueChanged(object sender, EventArgs e) => UpdatePreviewer();
         private void RelativeY_ValueChanged(object sender, EventArgs e) => UpdatePreviewer();
         private void RelativeZ_ValueChanged(object sender, EventArgs e) => UpdatePreviewer();
+
+        private void ObjectPerLines_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
+
+        private void Prefix_CheckedChanged(object sender, EventArgs e)  => UpdatePreviewer();
+
+        private void Suffix_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
     }
 }
