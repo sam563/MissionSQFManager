@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SQFMMForm));
             this.openFileButton = new System.Windows.Forms.Button();
-            this.objectsList = new System.Windows.Forms.ListBox();
             this.objectCounter = new System.Windows.Forms.Label();
             this.previewModeDropDown = new System.Windows.Forms.ComboBox();
             this.outputFormatDropDown = new System.Windows.Forms.ComboBox();
@@ -40,7 +39,7 @@
             this.fileName = new System.Windows.Forms.Label();
             this.saveOutputButton = new System.Windows.Forms.Button();
             this.sortByNamesCheckBox = new System.Windows.Forms.CheckBox();
-            this.replaceClassnames = new System.Windows.Forms.CheckBox();
+            this.replaceClassnamesCheckBox = new System.Windows.Forms.CheckBox();
             this.formatInputBox = new System.Windows.Forms.TextBox();
             this.formatLabel = new System.Windows.Forms.Label();
             this.formatHelpBox = new System.Windows.Forms.ListBox();
@@ -61,6 +60,9 @@
             this.prefixCheckBox = new System.Windows.Forms.CheckBox();
             this.suffixCheckBox = new System.Windows.Forms.CheckBox();
             this.relativePosition = new System.Windows.Forms.TextBox();
+            this.objectsList = new System.Windows.Forms.ListBox();
+            this.presetDropDown = new System.Windows.Forms.ComboBox();
+            this.presetLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.indentsNumBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -74,17 +76,7 @@
             this.openFileButton.TabIndex = 0;
             this.openFileButton.Text = "Load from file";
             this.openFileButton.UseVisualStyleBackColor = false;
-            this.openFileButton.Click += new System.EventHandler(this.OpenFileButtonClick);
-            // 
-            // objectsList
-            // 
-            this.objectsList.FormattingEnabled = true;
-            this.objectsList.HorizontalScrollbar = true;
-            this.objectsList.Location = new System.Drawing.Point(109, 152);
-            this.objectsList.MaximumSize = new System.Drawing.Size(1000, 1000);
-            this.objectsList.Name = "objectsList";
-            this.objectsList.Size = new System.Drawing.Size(899, 407);
-            this.objectsList.TabIndex = 1;
+            this.openFileButton.Click += new System.EventHandler(this.OpenFile_Click);
             // 
             // objectCounter
             // 
@@ -173,16 +165,16 @@
             this.sortByNamesCheckBox.UseVisualStyleBackColor = true;
             this.sortByNamesCheckBox.CheckedChanged += new System.EventHandler(this.SortByNames_CheckedChanged);
             // 
-            // replaceClassnames
+            // replaceClassnamesCheckBox
             // 
-            this.replaceClassnames.AutoSize = true;
-            this.replaceClassnames.Location = new System.Drawing.Point(353, 604);
-            this.replaceClassnames.Name = "replaceClassnames";
-            this.replaceClassnames.Size = new System.Drawing.Size(189, 17);
-            this.replaceClassnames.TabIndex = 10;
-            this.replaceClassnames.Text = "Replace Class Names From Config";
-            this.replaceClassnames.UseVisualStyleBackColor = true;
-            this.replaceClassnames.CheckedChanged += new System.EventHandler(this.ReplaceNames_CheckedChanged);
+            this.replaceClassnamesCheckBox.AutoSize = true;
+            this.replaceClassnamesCheckBox.Location = new System.Drawing.Point(353, 604);
+            this.replaceClassnamesCheckBox.Name = "replaceClassnamesCheckBox";
+            this.replaceClassnamesCheckBox.Size = new System.Drawing.Size(189, 17);
+            this.replaceClassnamesCheckBox.TabIndex = 10;
+            this.replaceClassnamesCheckBox.Text = "Replace Class Names From Config";
+            this.replaceClassnamesCheckBox.UseVisualStyleBackColor = true;
+            this.replaceClassnamesCheckBox.CheckedChanged += new System.EventHandler(this.ReplaceNames_CheckedChanged);
             // 
             // formatInputBox
             // 
@@ -213,7 +205,7 @@
             "%3 Init",
             "%4 Has Init (bool: has init = true, no init = false)",
             "%5 Comma (Applies to all entries but last)"});
-            this.formatHelpBox.Location = new System.Drawing.Point(352, 67);
+            this.formatHelpBox.Location = new System.Drawing.Point(344, 63);
             this.formatHelpBox.Margin = new System.Windows.Forms.Padding(10);
             this.formatHelpBox.MultiColumn = true;
             this.formatHelpBox.Name = "formatHelpBox";
@@ -310,7 +302,7 @@
             this.objectPerLinesCheckBox.AutoSize = true;
             this.objectPerLinesCheckBox.Checked = true;
             this.objectPerLinesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.objectPerLinesCheckBox.Location = new System.Drawing.Point(653, 34);
+            this.objectPerLinesCheckBox.Location = new System.Drawing.Point(909, 36);
             this.objectPerLinesCheckBox.Name = "objectPerLinesCheckBox";
             this.objectPerLinesCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.objectPerLinesCheckBox.Size = new System.Drawing.Size(99, 17);
@@ -352,11 +344,42 @@
             this.relativePosition.TabIndex = 36;
             this.relativePosition.TextChanged += new System.EventHandler(this.RelativePosition_TextChanged);
             // 
+            // objectsList
+            // 
+            this.objectsList.FormattingEnabled = true;
+            this.objectsList.HorizontalScrollbar = true;
+            this.objectsList.Location = new System.Drawing.Point(109, 152);
+            this.objectsList.MaximumSize = new System.Drawing.Size(1000, 1000);
+            this.objectsList.Name = "objectsList";
+            this.objectsList.Size = new System.Drawing.Size(899, 407);
+            this.objectsList.TabIndex = 1;
+            // 
+            // presetDropDown
+            // 
+            this.presetDropDown.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            this.presetDropDown.FormattingEnabled = true;
+            this.presetDropDown.Location = new System.Drawing.Point(737, 34);
+            this.presetDropDown.Name = "presetDropDown";
+            this.presetDropDown.Size = new System.Drawing.Size(142, 21);
+            this.presetDropDown.TabIndex = 37;
+            this.presetDropDown.SelectedIndexChanged += new System.EventHandler(this.Preset_SelectedIndexChanged);
+            // 
+            // presetLabel
+            // 
+            this.presetLabel.AutoSize = true;
+            this.presetLabel.Location = new System.Drawing.Point(692, 36);
+            this.presetLabel.Name = "presetLabel";
+            this.presetLabel.Size = new System.Drawing.Size(37, 13);
+            this.presetLabel.TabIndex = 38;
+            this.presetLabel.Text = "Preset";
+            // 
             // SQFMMForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1147, 670);
+            this.Controls.Add(this.presetLabel);
+            this.Controls.Add(this.presetDropDown);
             this.Controls.Add(this.relativePosition);
             this.Controls.Add(this.suffixCheckBox);
             this.Controls.Add(this.prefixCheckBox);
@@ -373,7 +396,7 @@
             this.Controls.Add(this.formatHelpBox);
             this.Controls.Add(this.formatLabel);
             this.Controls.Add(this.formatInputBox);
-            this.Controls.Add(this.replaceClassnames);
+            this.Controls.Add(this.replaceClassnamesCheckBox);
             this.Controls.Add(this.sortByNamesCheckBox);
             this.Controls.Add(this.saveOutputButton);
             this.Controls.Add(this.fileName);
@@ -396,7 +419,6 @@
         #endregion
 
         private System.Windows.Forms.Button openFileButton;
-        private System.Windows.Forms.ListBox objectsList;
         private System.Windows.Forms.Label objectCounter;
         private System.Windows.Forms.ComboBox previewModeDropDown;
         private System.Windows.Forms.ComboBox outputFormatDropDown;
@@ -405,7 +427,7 @@
         private System.Windows.Forms.Label fileName;
         private System.Windows.Forms.Button saveOutputButton;
         private System.Windows.Forms.CheckBox sortByNamesCheckBox;
-        private System.Windows.Forms.CheckBox replaceClassnames;
+        private System.Windows.Forms.CheckBox replaceClassnamesCheckBox;
         private System.Windows.Forms.TextBox formatInputBox;
         private System.Windows.Forms.Label formatLabel;
         private System.Windows.Forms.ListBox formatHelpBox;
@@ -426,6 +448,9 @@
         private System.Windows.Forms.CheckBox prefixCheckBox;
         private System.Windows.Forms.CheckBox suffixCheckBox;
         private System.Windows.Forms.TextBox relativePosition;
+        private System.Windows.Forms.ListBox objectsList;
+        private System.Windows.Forms.ComboBox presetDropDown;
+        private System.Windows.Forms.Label presetLabel;
     }
 }
 

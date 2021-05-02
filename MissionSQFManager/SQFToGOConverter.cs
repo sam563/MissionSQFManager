@@ -11,10 +11,6 @@ namespace MissionSQFManager
 {
     public class SQFToGOConverter
     {
-        private static GameObject[] gameObjects;
-
-        public static GameObject[] GameObjects { get => gameObjects; private set => gameObjects = value; }
-
         public static GameObject[] SQFToGameObjects(string file)
         {
             List<GameObject> gameObjects = new List<GameObject>();
@@ -160,9 +156,7 @@ namespace MissionSQFManager
                 }
             }
 
-            var goArr = gameObjects.ToArray();
-            GameObjects = goArr; //Cache gameobjects
-            return GameObjects;
+            return gameObjects.ToArray();
         }
     }
 }

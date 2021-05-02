@@ -9,59 +9,145 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Xml;
 
 namespace MissionSQFManager
 {
     public partial class SQFMMForm : Form
     {
+        private delegate void OnFileRead(GameObject[] gameObjects);
+        private readonly OnFileRead onFileRead; //Called once a file is converted to gameObjects after being opened
+
+        private GameObject[] gameObjects = null; //Unmodified gameObjects extracted from current loaded file
+        private GameObject[] renamedObjects = null; //gameObjects renamed from config
+        private Vector3 center; //The average position (center) of all current gameObjects
+
         public SQFMMForm()
         {
             InitializeComponent();
+            InitializePresets();
+            LoadPreset(0);
 
-            //Load presets from config
-            if (Utils.GetElementFromConfig("Format", out string format)) formatInputBox.Text = format;
-            if (Utils.GetElementFromConfig("Prefix", out string prefix)) prefixLineInputBox.Text = prefix;
-            if (Utils.GetElementFromConfig("Suffix", out string suffix)) suffixLineInputBox.Text = suffix;
-            if (Utils.GetElementFromConfig("Indents", out string indents) && int.TryParse(indents, out int intdent)) indentsNumBox.Value = intdent;
+            onFileRead += HandleGameObjects;
+            relativePosition.LostFocus += UpdateRelativePosition;
 
             //Set default values for drop downs
             previewModeDropDown.Text = previewModeDropDown.Items[0].ToString();
             outputFormatDropDown.Text = outputFormatDropDown.Items[0].ToString();
+            presetDropDown.Text = presetDropDown.Items[0].ToString();
 
             //Make sure relative pos input fields reflect checkbox state on startup
             SetRelativeInputFieldsEnabled();
 
             //Tool tips
             sortByClassToolTip.SetToolTip(sortByNamesCheckBox, "Orders objects by their classname alphanumerically.");
-            replaceClassnamesToolTip.SetToolTip(replaceClassnames, "Replaces all classnames as defined in config. (Primarily for replacing MAP objects with their lootable counterparts)");
+            replaceClassnamesToolTip.SetToolTip(replaceClassnamesCheckBox, "Replaces all classnames as defined in config. (Primarily for replacing MAP objects with their lootable counterparts)");
             loadFileToolTip.SetToolTip(openFileButton, "Load Arma generated .sqf mission file for the program to read from.");
             saveFileToolTip.SetToolTip(saveOutputButton, "Save generated output in the selected format.");
         }
 
+        private void InitializePresets()
+        {
+            XmlNode presets = GetConfigPresets();
+            for (int i = 0; i < presets.ChildNodes.Count; i++)
+            {
+                XmlNode preset = presets.ChildNodes[i];
+                presetDropDown.Items.Add(preset.Name);
+            }
+        }
+
+        private void LoadPreset(int index)
+        {
+            XmlNode presets = GetConfigPresets();
+
+            XmlNode preset = presets.ChildNodes[index];
+
+            string GetNodeText(string xpath)
+            {
+                try 
+                {
+                    return preset.SelectSingleNode(xpath).InnerText;
+                }
+                catch
+                {
+                    if (index > 0)
+                    {
+                        try
+                        {
+                            //Try to get from default preset instead
+                            return presets.ChildNodes[0].SelectSingleNode(xpath).InnerText;
+                        }
+                        catch
+                        {
+                            return string.Empty;
+                        }
+                    }
+
+                    return string.Empty;
+                }
+            }
+
+            formatInputBox.Text = GetNodeText("Format");
+            prefixLineInputBox.Text = GetNodeText("Prefix");
+            suffixLineInputBox.Text = GetNodeText("Suffix");
+            if (int.TryParse(GetNodeText("Indents"), out int i)) indentsNumBox.Value = i;
+            if (bool.TryParse(GetNodeText("ReplaceClassnames"), out bool rc)) replaceClassnamesCheckBox.Checked = rc;
+            if (bool.TryParse(GetNodeText("OrderByClassname"), out bool obc)) sortByNamesCheckBox.Checked = obc;
+            if (bool.TryParse(GetNodeText("RelativePositions"), out bool rp)) relativePosCheckBox.Checked = rp;
+            if (bool.TryParse(GetNodeText("DiscardUnits"), out bool du)) discardUnitsCheckBox.Checked = du;
+            if (bool.TryParse(GetNodeText("DiscardVehicles"), out bool dv)) discardVehiclesCheckBox.Checked = dv;
+
+        }
+
+        private XmlNode GetConfigPresets()
+        {
+            Utils.GetConfigXML(out XmlDocument doc);
+            return doc.SelectSingleNode("/Config/Presets");
+        }
+
+        private void HandleGameObjects(GameObject[] gameObjects)
+        {
+            //Update object counter
+            objectCounter.Text = $"{gameObjects.Length} objects loaded";
+
+            //This only needs to be done once when the file is first loaded
+            renamedObjects = GOClassNameReplacer.ReplaceClassnamesFromConfig(gameObjects);
+
+            //Find relative position
+            if (string.IsNullOrEmpty(relativePosition.Text))
+            {
+                Vector3 result = Vector3.zero;
+
+                //Calculate center pos
+                for (int i = 0; i < gameObjects.Length; i++)
+                {
+                    result += (gameObjects[i].position / gameObjects.Length);
+                }
+
+                result.z = 0; //Do not average the height
+                center = result;
+
+                UpdateRelativePosition(null, null);
+            }
+        }
+
+        private void UpdateRelativePosition(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(relativePosition.Text)) relativePosition.Text = center.ToString();
+        }
+
         private void UpdatePreviewer()
         {
-            var gameObjects = SQFToGOConverter.GameObjects;
-
-            bool isFormattedSQF = (outputFormatDropDown.SelectedIndex == 0);
-            formatInputBox.Enabled = isFormattedSQF;
-            indentsNumBox.Enabled = isFormattedSQF;
-            objectPerLinesCheckBox.Enabled = isFormattedSQF;
-            prefixCheckBox.Enabled = isFormattedSQF;
-            suffixCheckBox.Enabled = isFormattedSQF;
-
-            prefixLineInputBox.Enabled = isFormattedSQF && prefixCheckBox.Checked;
-            suffixLineInputBox.Enabled = isFormattedSQF && suffixCheckBox.Checked;
-
-            formatHelpBox.Visible = isFormattedSQF;
+            UpdateFormattedSQFComponents();
 
             objectsList.Items.Clear();
 
             bool isValid = (gameObjects != null && gameObjects.Length > 0);
-
             saveOutputButton.Enabled = isValid;
 
             if (!isValid)
             {
+                objectsList.EndUpdate();
                 fileName.Text = "No file loaded";
                 objectCounter.Text = "No objects loaded";
                 return;
@@ -72,21 +158,36 @@ namespace MissionSQFManager
                 //Formatted object data
                 var output = GOToOutput(gameObjects);
                 if (output == null) return;
-                objectsList.Items.AddRange(GOToOutput(gameObjects));
+
+                //var watch = Stopwatch.StartNew();
+                objectsList.Items.AddRange(output);
+                //watch.Stop();
+                //Utils.DebugWindow($"{watch.ElapsedMilliseconds}ms");
             }
             else
             {
                 //Raw object data
-                objectsList.Items.AddRange(SQFToGOConverter.GameObjects);
+                objectsList.Items.AddRange(gameObjects);
             }
-
-            objectCounter.Text = $"{gameObjects.Length} objects loaded";
         }
 
-        private void OpenFileButtonClick(object sender, EventArgs e)
+        private void UpdateFormattedSQFComponents()
         {
-            string fileContent = string.Empty;
+            bool isSelected = (outputFormatDropDown.SelectedIndex == 0);
+            formatInputBox.Enabled = isSelected;
+            indentsNumBox.Enabled = isSelected;
+            objectPerLinesCheckBox.Enabled = isSelected;
+            prefixCheckBox.Enabled = isSelected;
+            suffixCheckBox.Enabled = isSelected;
 
+            prefixLineInputBox.Enabled = isSelected && prefixCheckBox.Checked;
+            suffixLineInputBox.Enabled = isSelected && suffixCheckBox.Checked;
+
+            formatHelpBox.Visible = isSelected;
+        }
+
+        private void OpenFile_Click(object sender, EventArgs e)
+        {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Filter = "sqf files (*.sqf)|*.sqf";
@@ -95,6 +196,8 @@ namespace MissionSQFManager
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
+                    string fileContent = string.Empty;
+
                     //Read the contents of the file into a stream
                     var fileStream = openFileDialog.OpenFile();
                     using (StreamReader reader = new StreamReader(fileStream))
@@ -103,19 +206,19 @@ namespace MissionSQFManager
                     }
 
                     fileName.Text = Path.GetFileName(openFileDialog.FileName);
+                    gameObjects = SQFToGOConverter.SQFToGameObjects(fileContent);
+                    onFileRead.Invoke(gameObjects);
                 }
             }
-
-            SQFToGOConverter.SQFToGameObjects(fileContent);
 
             UpdatePreviewer();
         }
 
         private void Save_Click(object sender, EventArgs e)
         {
-            if (SQFToGOConverter.GameObjects == null) return;
+            if (gameObjects == null) return;
 
-            var lines = GOToOutput(SQFToGOConverter.GameObjects, out string extention);
+            var lines = GOToOutput(gameObjects, out string extention);
 
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
@@ -136,16 +239,14 @@ namespace MissionSQFManager
 
         private string[] GOToOutput(GameObject[] gameObjects, out string extention)
         {
+            //var watch = Stopwatch.StartNew();
             extention = string.Empty;
             if (gameObjects == null) return null;
 
             string[] lines;
 
-            //Replace classnames from config file
-            if (replaceClassnames.Checked)
-            {
-                gameObjects = GOClassNameReplacer.ReplaceClassnamesFromConfig(gameObjects);
-            }
+            //No need to rename everytime we update
+            gameObjects = (replaceClassnamesCheckBox.Checked) ? renamedObjects : gameObjects;
 
             var objList = gameObjects.ToList();
 
@@ -209,7 +310,8 @@ namespace MissionSQFManager
                     extention = ".sqf";
                     break;
             }
-
+            //watch.Stop();
+            //Utils.DebugWindow($"{watch.ElapsedMilliseconds}ms");
             return lines;
         }
 
@@ -242,10 +344,6 @@ namespace MissionSQFManager
             UpdatePreviewer();
         }
 
-        private void RelativeX_ValueChanged(object sender, EventArgs e) => UpdatePreviewer();
-        private void RelativeY_ValueChanged(object sender, EventArgs e) => UpdatePreviewer();
-        private void RelativeZ_ValueChanged(object sender, EventArgs e) => UpdatePreviewer();
-
         private void ObjectPerLines_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
 
         private void Prefix_CheckedChanged(object sender, EventArgs e)  => UpdatePreviewer();
@@ -253,5 +351,7 @@ namespace MissionSQFManager
         private void Suffix_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
 
         private void RelativePosition_TextChanged(object sender, EventArgs e) => UpdatePreviewer();
+
+        private void Preset_SelectedIndexChanged(object sender, EventArgs e) => LoadPreset(presetDropDown.SelectedIndex);
     }
 }
