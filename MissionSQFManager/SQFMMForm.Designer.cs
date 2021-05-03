@@ -63,6 +63,7 @@
             this.objectsList = new System.Windows.Forms.ListBox();
             this.presetDropDown = new System.Windows.Forms.ComboBox();
             this.presetLabel = new System.Windows.Forms.Label();
+            this.missingConfigWarnLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.indentsNumBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -402,12 +403,26 @@
             this.presetLabel.TabIndex = 38;
             this.presetLabel.Text = "Preset";
             // 
+            // missingConfigWarnLabel
+            // 
+            this.missingConfigWarnLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.missingConfigWarnLabel.AutoSize = true;
+            this.missingConfigWarnLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.missingConfigWarnLabel.ForeColor = System.Drawing.Color.IndianRed;
+            this.missingConfigWarnLabel.Location = new System.Drawing.Point(72, 31);
+            this.missingConfigWarnLabel.Name = "missingConfigWarnLabel";
+            this.missingConfigWarnLabel.Size = new System.Drawing.Size(166, 17);
+            this.missingConfigWarnLabel.TabIndex = 39;
+            this.missingConfigWarnLabel.Text = "Config.xml Not Found!";
+            this.missingConfigWarnLabel.Visible = false;
+            // 
             // SQFMMForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(1051, 670);
+            this.Controls.Add(this.missingConfigWarnLabel);
             this.Controls.Add(this.presetLabel);
             this.Controls.Add(this.presetDropDown);
             this.Controls.Add(this.relativePosition);
@@ -482,6 +497,7 @@
         private System.Windows.Forms.ListBox objectsList;
         private System.Windows.Forms.ComboBox presetDropDown;
         private System.Windows.Forms.Label presetLabel;
+        private System.Windows.Forms.Label missingConfigWarnLabel;
     }
 }
 

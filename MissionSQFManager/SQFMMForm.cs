@@ -25,15 +25,25 @@ namespace MissionSQFManager
         public SQFMMForm()
         {
             InitializeComponent();
-            InitializePresets();
-            LoadPreset(0);
+
+            bool configExists = InitializePresets();
+            missingConfigWarnLabel.Visible = !configExists;
 
             relativePosition.LostFocus += UpdateRelativePosition;
 
             //Set default values for drop downs
             previewModeDropDown.Text = previewModeDropDown.Items[0].ToString();
             outputFormatDropDown.Text = outputFormatDropDown.Items[0].ToString();
-            presetDropDown.Text = presetDropDown.Items[0].ToString();
+
+            if (configExists)
+            {
+                presetDropDown.Text = presetDropDown.Items[0].ToString();
+            }
+            else
+            {
+                presetDropDown.Visible = false;
+                presetLabel.Visible = false;
+            }
 
             //Tool tips
             sortByClassToolTip.SetToolTip(sortByNamesCheckBox, "Orders objects by their classname alphanumerically.");
@@ -42,19 +52,20 @@ namespace MissionSQFManager
             saveFileToolTip.SetToolTip(saveOutputButton, "Save generated output in the selected format.");
         }
 
-        private void InitializePresets()
+        private bool InitializePresets()
         {
-            XmlNode presets = GetConfigPresets();
+            if (!GetConfigPresets(out XmlNode presets)) return false;
             for (int i = 0; i < presets.ChildNodes.Count; i++)
             {
                 XmlNode preset = presets.ChildNodes[i];
                 presetDropDown.Items.Add(preset.Name);
             }
+            return true;
         }
 
         private void LoadPreset(int index)
         {
-            XmlNode presets = GetConfigPresets();
+            GetConfigPresets(out XmlNode presets);
 
             XmlNode preset = presets.ChildNodes[index];
 
@@ -100,10 +111,12 @@ namespace MissionSQFManager
             UpdatePreviewer();
         }
 
-        private XmlNode GetConfigPresets()
+        private bool GetConfigPresets(out XmlNode presets)
         {
-            Utils.GetConfigXML(out XmlDocument doc);
-            return doc.SelectSingleNode("/Config/Presets");
+            presets = null;
+            if (!Utils.GetConfigXML(out XmlDocument doc)) return false;
+            presets = doc.SelectSingleNode("/Config/Presets");
+            return true;
         }
 
         private void UpdateRelativePosition(object sender, EventArgs e)
