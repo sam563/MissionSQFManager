@@ -10,17 +10,17 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Xml;
+using System.Threading;
 
 namespace MissionSQFManager
 {
     public partial class SQFMMForm : Form
     {
-        private delegate void OnFileRead(GameObject[] gameObjects);
-        private readonly OnFileRead onFileRead; //Called once a file is converted to gameObjects after being opened
-
         private GameObject[] gameObjects = null; //Unmodified gameObjects extracted from current loaded file
         private GameObject[] renamedObjects = null; //gameObjects renamed from config
-        private Vector3 center; //The average position (center) of all current gameObjects
+        private Vector3 center = Vector3.zero; //The average position (center) of all current gameObjects
+
+        private bool updateEnabled = true;
 
         public SQFMMForm()
         {
@@ -28,16 +28,12 @@ namespace MissionSQFManager
             InitializePresets();
             LoadPreset(0);
 
-            onFileRead += HandleGameObjects;
             relativePosition.LostFocus += UpdateRelativePosition;
 
             //Set default values for drop downs
             previewModeDropDown.Text = previewModeDropDown.Items[0].ToString();
             outputFormatDropDown.Text = outputFormatDropDown.Items[0].ToString();
             presetDropDown.Text = presetDropDown.Items[0].ToString();
-
-            //Make sure relative pos input fields reflect checkbox state on startup
-            SetRelativeInputFieldsEnabled();
 
             //Tool tips
             sortByClassToolTip.SetToolTip(sortByNamesCheckBox, "Orders objects by their classname alphanumerically.");
@@ -87,6 +83,8 @@ namespace MissionSQFManager
                 }
             }
 
+            updateEnabled = false; //Disable previewer updates
+
             formatInputBox.Text = GetNodeText("Format");
             prefixLineInputBox.Text = GetNodeText("Prefix");
             suffixLineInputBox.Text = GetNodeText("Suffix");
@@ -94,41 +92,18 @@ namespace MissionSQFManager
             if (bool.TryParse(GetNodeText("ReplaceClassnames"), out bool rc)) replaceClassnamesCheckBox.Checked = rc;
             if (bool.TryParse(GetNodeText("OrderByClassname"), out bool obc)) sortByNamesCheckBox.Checked = obc;
             if (bool.TryParse(GetNodeText("RelativePositions"), out bool rp)) relativePosCheckBox.Checked = rp;
+            relativePosition.Enabled = rp;
             if (bool.TryParse(GetNodeText("DiscardUnits"), out bool du)) discardUnitsCheckBox.Checked = du;
             if (bool.TryParse(GetNodeText("DiscardVehicles"), out bool dv)) discardVehiclesCheckBox.Checked = dv;
 
+            updateEnabled = true;
+            UpdatePreviewer();
         }
 
         private XmlNode GetConfigPresets()
         {
             Utils.GetConfigXML(out XmlDocument doc);
             return doc.SelectSingleNode("/Config/Presets");
-        }
-
-        private void HandleGameObjects(GameObject[] gameObjects)
-        {
-            //Update object counter
-            objectCounter.Text = $"{gameObjects.Length} objects loaded";
-
-            //This only needs to be done once when the file is first loaded
-            renamedObjects = GOClassNameReplacer.ReplaceClassnamesFromConfig(gameObjects);
-
-            //Find relative position
-            if (string.IsNullOrEmpty(relativePosition.Text))
-            {
-                Vector3 result = Vector3.zero;
-
-                //Calculate center pos
-                for (int i = 0; i < gameObjects.Length; i++)
-                {
-                    result += (gameObjects[i].position / gameObjects.Length);
-                }
-
-                result.z = 0; //Do not average the height
-                center = result;
-
-                UpdateRelativePosition(null, null);
-            }
         }
 
         private void UpdateRelativePosition(object sender, EventArgs e)
@@ -138,6 +113,8 @@ namespace MissionSQFManager
 
         private void UpdatePreviewer()
         {
+            if (!updateEnabled) return;
+
             UpdateFormattedSQFComponents();
 
             objectsList.Items.Clear();
@@ -160,9 +137,10 @@ namespace MissionSQFManager
                 if (output == null) return;
 
                 //var watch = Stopwatch.StartNew();
-                objectsList.Items.AddRange(output);
+                objectsList.Items.AddRange(output); //Extremely slow
                 //watch.Stop();
-                //Utils.DebugWindow($"{watch.ElapsedMilliseconds}ms");
+                //Utils.DebugWindow($"Displayed {lines.Length} lines in {watch.ElapsedMilliseconds}ms");
+
             }
             else
             {
@@ -207,11 +185,35 @@ namespace MissionSQFManager
 
                     fileName.Text = Path.GetFileName(openFileDialog.FileName);
                     gameObjects = SQFToGOConverter.SQFToGameObjects(fileContent);
-                    onFileRead.Invoke(gameObjects);
+                    HandleGameObjectUpdate(gameObjects);
                 }
             }
+        }
 
-            UpdatePreviewer();
+        private void HandleGameObjectUpdate(GameObject[] gameObjects)
+        {
+            //Update object counter
+            objectCounter.Text = $"{gameObjects.Length} objects loaded";
+
+            //This only needs to be done once when the file is first loaded
+            renamedObjects = GOClassNameReplacer.ReplaceClassnamesFromConfig(gameObjects);
+
+            //Find relative position
+            if (string.IsNullOrEmpty(relativePosition.Text))
+            {
+                Vector3 result = Vector3.zero;
+
+                //Calculate center pos
+                for (int i = 0; i < gameObjects.Length; i++)
+                {
+                    result += (gameObjects[i].position / gameObjects.Length);
+                }
+
+                result.z = 0; //Do not average the height
+                center = result;
+
+                UpdateRelativePosition(null, null);
+            }
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -310,14 +312,7 @@ namespace MissionSQFManager
                     extention = ".sqf";
                     break;
             }
-            //watch.Stop();
-            //Utils.DebugWindow($"{watch.ElapsedMilliseconds}ms");
             return lines;
-        }
-
-        private void SetRelativeInputFieldsEnabled()
-        {
-            relativePosition.Enabled = relativePosCheckBox.Checked;
         }
 
         private void PreviewMode_SelectedIndexChanged(object sender, EventArgs e) => UpdatePreviewer();
@@ -340,7 +335,7 @@ namespace MissionSQFManager
 
         private void RelativePos_CheckedChanged(object sender, EventArgs e)
         {
-            SetRelativeInputFieldsEnabled();
+            relativePosition.Enabled = relativePosCheckBox.Checked; //Field enabled is determined by checkbox
             UpdatePreviewer();
         }
 
