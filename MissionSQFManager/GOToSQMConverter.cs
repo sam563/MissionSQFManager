@@ -18,6 +18,7 @@ namespace MissionSQFManager
                         $"		class Item{index}",
                         "		{",
                         $"			position[]={{{go.position.x},{go.position.z},{go.position.y}}};",
+                        $"			special=\"NONE\";",
                         $"			azimut=-{go.direction};",
                         $"			id={index};",
                         $"			side=\"EMPTY\";",
@@ -37,7 +38,7 @@ namespace MissionSQFManager
                     "	class Vehicles",
                     "	{",
                     $"		items={gameObjects.Length};"
-                }    
+                }
             );
 
             for (int i = 0; i < gameObjects.Length; i++)

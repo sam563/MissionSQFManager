@@ -134,8 +134,6 @@ namespace MissionSQFManager
         {
             if (!updateEnabled) return;
 
-            UpdateFormattedSQFComponents();
-
             objectsList.Items.Clear();
 
             bool isValid = (gameObjects != null && gameObjects.Length > 0);
@@ -151,37 +149,17 @@ namespace MissionSQFManager
 
             if (previewModeDropDown.SelectedIndex == 0)
             {
-                //var watch = Stopwatch.StartNew();
-
                 //Formatted object data
                 var output = GOToOutput(gameObjects);
                 if (output == null) return;
 
-                objectsList.Items.AddRange(output); //Extremely slow
-
-                //watch.Stop();
-                //Utils.DebugWindow($"Displayed {output.Length} lines in {watch.ElapsedMilliseconds}ms");
+                objectsList.Items.AddRange(output);
             }
             else
             {
                 //Raw object data
                 objectsList.Items.AddRange(gameObjects);
             }
-        }
-
-        private void UpdateFormattedSQFComponents()
-        {
-            bool isSelected = (outputFormatDropDown.SelectedIndex == 0);
-            formatInputBox.Enabled = isSelected;
-            indentsNumBox.Enabled = isSelected;
-            objectPerLinesCheckBox.Enabled = isSelected;
-            prefixCheckBox.Enabled = isSelected;
-            suffixCheckBox.Enabled = isSelected;
-
-            prefixLineInputBox.Enabled = isSelected && prefixCheckBox.Checked;
-            suffixLineInputBox.Enabled = isSelected && suffixCheckBox.Checked;
-
-            formatHelpBox.Visible = isSelected;
         }
 
         private void OpenFile_Click(object sender, EventArgs e)
@@ -261,7 +239,6 @@ namespace MissionSQFManager
 
         private string[] GOToOutput(GameObject[] gameObjects, out string extention)
         {
-            //var watch = Stopwatch.StartNew();
             extention = string.Empty;
             if (gameObjects == null) return null;
 
@@ -335,9 +312,32 @@ namespace MissionSQFManager
             return lines;
         }
 
-        private void PreviewMode_SelectedIndexChanged(object sender, EventArgs e) => UpdatePreviewer();
+        private void OutputFormat_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            bool isSelected = (outputFormatDropDown.SelectedIndex == 0);
+            formatInputBox.Enabled = isSelected;
+            indentsNumBox.Enabled = isSelected;
+            objectPerLinesCheckBox.Enabled = isSelected;
+            prefixCheckBox.Enabled = isSelected;
+            suffixCheckBox.Enabled = isSelected;
 
-        private void OutputFormat_SelectedIndexChanged(object sender, EventArgs e) => UpdatePreviewer();
+            prefixLineInputBox.Enabled = isSelected && prefixCheckBox.Checked;
+            suffixLineInputBox.Enabled = isSelected && suffixCheckBox.Checked;
+
+            formatHelpBox.Visible = isSelected;
+
+            UpdatePreviewer();
+        }
+
+        private void RelativePos_CheckedChanged(object sender, EventArgs e)
+        {
+            relativePosition.Enabled = relativePosCheckBox.Checked; //Field enabled is determined by checkbox
+            UpdatePreviewer();
+        }
+
+        private void Preset_SelectedIndexChanged(object sender, EventArgs e) => LoadPreset(presetDropDown.SelectedIndex);
+
+        private void PreviewMode_SelectedIndexChanged(object sender, EventArgs e) => UpdatePreviewer();
 
         private void SortByNames_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
 
@@ -346,18 +346,14 @@ namespace MissionSQFManager
         private void Format_TextChanged(object sender, EventArgs e) => UpdatePreviewer();
 
         private void DiscardUnits_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
+
         private void DiscardVehicles_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
 
         private void SuffixLine_TextChanged(object sender, EventArgs e) => UpdatePreviewer();
+
         private void PrefixLine_TextChanged(object sender, EventArgs e) => UpdatePreviewer();
 
         private void Indents_ValueChanged(object sender, EventArgs e) => UpdatePreviewer();
-
-        private void RelativePos_CheckedChanged(object sender, EventArgs e)
-        {
-            relativePosition.Enabled = relativePosCheckBox.Checked; //Field enabled is determined by checkbox
-            UpdatePreviewer();
-        }
 
         private void ObjectPerLines_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
 
@@ -366,7 +362,5 @@ namespace MissionSQFManager
         private void Suffix_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
 
         private void RelativePosition_TextChanged(object sender, EventArgs e) => UpdatePreviewer();
-
-        private void Preset_SelectedIndexChanged(object sender, EventArgs e) => LoadPreset(presetDropDown.SelectedIndex);
     }
 }
