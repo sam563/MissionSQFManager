@@ -375,7 +375,6 @@
             // 
             this.objectsList.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.objectsList.FormattingEnabled = true;
-            this.objectsList.HorizontalScrollbar = true;
             this.objectsList.Location = new System.Drawing.Point(75, 149);
             this.objectsList.MaximumSize = new System.Drawing.Size(1000, 1000);
             this.objectsList.Name = "objectsList";

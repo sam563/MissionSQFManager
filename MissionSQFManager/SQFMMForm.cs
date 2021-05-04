@@ -26,6 +26,8 @@ namespace MissionSQFManager
         {
             InitializeComponent();
 
+            objectsList.HorizontalScrollbar = false; //Has huge performance impact Do not enable!!
+
             bool configExists = InitializePresets();
             missingConfigWarnLabel.Visible = !configExists;
 
@@ -65,7 +67,11 @@ namespace MissionSQFManager
 
         private void LoadPreset(int index)
         {
-            GetConfigPresets(out XmlNode presets);
+            bool foundConfig = GetConfigPresets(out XmlNode presets);
+
+            missingConfigWarnLabel.Visible = !foundConfig;
+
+            if (!foundConfig) return;
 
             XmlNode preset = presets.ChildNodes[index];
 
@@ -145,15 +151,16 @@ namespace MissionSQFManager
 
             if (previewModeDropDown.SelectedIndex == 0)
             {
+                //var watch = Stopwatch.StartNew();
+
                 //Formatted object data
                 var output = GOToOutput(gameObjects);
                 if (output == null) return;
 
-                //var watch = Stopwatch.StartNew();
                 objectsList.Items.AddRange(output); //Extremely slow
-                //watch.Stop();
-                //Utils.DebugWindow($"Displayed {lines.Length} lines in {watch.ElapsedMilliseconds}ms");
 
+                //watch.Stop();
+                //Utils.DebugWindow($"Displayed {output.Length} lines in {watch.ElapsedMilliseconds}ms");
             }
             else
             {
