@@ -52,6 +52,7 @@ namespace MissionSQFManager
             replaceClassnamesToolTip.SetToolTip(replaceClassnamesCheckBox, "Replaces all classnames as defined in config. (Primarily for replacing MAP objects with their lootable counterparts)");
             loadFileToolTip.SetToolTip(openFileButton, "Load Arma generated .sqf mission file for the program to read from.");
             saveFileToolTip.SetToolTip(saveOutputButton, "Save generated output in the selected format.");
+            relativePosToolTip.SetToolTip(relativePosition, "Sets object positions to be relative to this point.");
         }
 
         private bool InitializePresets()
@@ -186,6 +187,8 @@ namespace MissionSQFManager
                     HandleGameObjectUpdate(gameObjects);
                 }
             }
+
+            UpdatePreviewer();
         }
 
         private void HandleGameObjectUpdate(GameObject[] gameObjects)

@@ -2,7 +2,6 @@
 <Config>
   <Presets>
     <Default>
-      <!--//The default formatting of each line.-->
       <!--(classname = %0)   (position = %1)   (direction = %2)	(init = %3)	(isInit ((true / false) if init null or empty) = %4)	(Comma (Applies to all but last) = %5)-->
       <Format>[%0, [%1, %2], %3]%5</Format>
       <Prefix></Prefix>
@@ -26,6 +25,18 @@
       <DiscardUnits>true</DiscardUnits>
       <DiscardVehicles>false</DiscardVehicles>
     </DZMSSpawnObjects>
+
+    <wai_spawnObjects>
+      <Format>[%0, %1, %2]%5</Format>
+      <Prefix>[[</Prefix>
+      <Suffix>],_position,_mission] call wai_spawnObjects;</Suffix>
+      <Indents>1</Indents>
+      <ReplaceClassnames>true</ReplaceClassnames>
+      <OrderByClassname>false</OrderByClassname>
+      <RelativePositions>true</RelativePositions>
+      <DiscardUnits>true</DiscardUnits>
+      <DiscardVehicles>false</DiscardVehicles>
+    </wai_spawnObjects>
 
     <fn_spawnObjects>
       <Format>[%0, %1, %2]%5</Format>

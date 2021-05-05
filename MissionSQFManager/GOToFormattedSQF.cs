@@ -20,7 +20,7 @@ namespace MissionSQFManager
 
             for (int i = 0; i < indentations; i++)
             {
-                indents += "   ";
+                indents += "	";
             }
 
             if (!string.IsNullOrEmpty(prefix)) formatted.Add(prefix);

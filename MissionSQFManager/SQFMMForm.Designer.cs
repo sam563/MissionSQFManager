@@ -64,6 +64,7 @@
             this.presetDropDown = new System.Windows.Forms.ComboBox();
             this.presetLabel = new System.Windows.Forms.Label();
             this.missingConfigWarnLabel = new System.Windows.Forms.Label();
+            this.relativePosToolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.indentsNumBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -497,6 +498,7 @@
         private System.Windows.Forms.ComboBox presetDropDown;
         private System.Windows.Forms.Label presetLabel;
         private System.Windows.Forms.Label missingConfigWarnLabel;
+        private System.Windows.Forms.ToolTip relativePosToolTip;
     }
 }
 
