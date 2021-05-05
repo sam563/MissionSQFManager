@@ -20,7 +20,7 @@ namespace MissionSQFManager
         private GameObject[] renamedObjects = null; //gameObjects renamed from config
         private Vector3 center = Vector3.zero; //The average position (center) of all current gameObjects
 
-        private bool updateEnabled = true;
+        private bool updateEnabled = true; //Should the object previewer update?
 
         public SQFMMForm()
         {
@@ -126,11 +126,6 @@ namespace MissionSQFManager
             return true;
         }
 
-        private void UpdateRelativePosition(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(relativePosition.Text)) relativePosition.Text = center.ToString();
-        }
-
         private void UpdatePreviewer()
         {
             if (!updateEnabled) return;
@@ -215,6 +210,11 @@ namespace MissionSQFManager
 
                 UpdateRelativePosition(null, null);
             }
+        }
+
+        private void UpdateRelativePosition(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(relativePosition.Text)) relativePosition.Text = center.ToString();
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -338,6 +338,18 @@ namespace MissionSQFManager
             UpdatePreviewer();
         }
 
+        private void Prefix_CheckedChanged(object sender, EventArgs e)
+        {
+            prefixLineInputBox.Enabled = prefixCheckBox.Checked;
+            UpdatePreviewer();
+        }
+
+        private void Suffix_CheckedChanged(object sender, EventArgs e)
+        {
+            suffixLineInputBox.Enabled = suffixCheckBox.Checked;
+            UpdatePreviewer();
+        }
+
         private void Preset_SelectedIndexChanged(object sender, EventArgs e) => LoadPreset(presetDropDown.SelectedIndex);
 
         private void PreviewMode_SelectedIndexChanged(object sender, EventArgs e) => UpdatePreviewer();
@@ -359,10 +371,6 @@ namespace MissionSQFManager
         private void Indents_ValueChanged(object sender, EventArgs e) => UpdatePreviewer();
 
         private void ObjectPerLines_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
-
-        private void Prefix_CheckedChanged(object sender, EventArgs e)  => UpdatePreviewer();
-
-        private void Suffix_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
 
         private void RelativePosition_TextChanged(object sender, EventArgs e) => UpdatePreviewer();
     }
