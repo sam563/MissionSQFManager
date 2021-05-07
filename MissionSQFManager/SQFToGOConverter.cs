@@ -30,7 +30,7 @@ namespace MissionSQFManager
                     string vehicle = "createVehicle";
                     string unit = "createUnit";
 
-                    if (((i - 1) + vehicle.Length <= file.Length) && (file.Substring(i, vehicle.Length) == vehicle))
+                    if (((i + vehicle.Length) <= file.Length) && (file.Substring(i, vehicle.Length) == vehicle))
                     {
                         if (gameObject != null) gameObjects.Add(gameObject);
                         gameObject = new GameObject
@@ -41,7 +41,7 @@ namespace MissionSQFManager
 
                         continue;
                     }
-                    else if (((i - 1) + unit.Length <= file.Length) && (file.Substring(i, unit.Length) == unit))
+                    else if (((i + unit.Length) <= file.Length) && (file.Substring(i, unit.Length) == unit))
                     {
                         if (gameObject != null) gameObjects.Add(gameObject);
                         gameObject = new GameObject
