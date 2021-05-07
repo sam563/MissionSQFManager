@@ -12,6 +12,7 @@ namespace MissionSQFManager
     {
         public enum Type
         {
+            Object,
             Vehicle,
             Unit
         }

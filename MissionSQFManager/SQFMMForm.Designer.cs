@@ -65,6 +65,7 @@
             this.presetLabel = new System.Windows.Forms.Label();
             this.missingConfigWarnLabel = new System.Windows.Forms.Label();
             this.relativePosToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.discardObjectsCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.indentsNumBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -294,7 +295,7 @@
             // 
             this.indentsLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.indentsLabel.AutoSize = true;
-            this.indentsLabel.Location = new System.Drawing.Point(860, 72);
+            this.indentsLabel.Location = new System.Drawing.Point(853, 72);
             this.indentsLabel.Name = "indentsLabel";
             this.indentsLabel.Size = new System.Drawing.Size(65, 13);
             this.indentsLabel.TabIndex = 21;
@@ -303,7 +304,7 @@
             // indentsNumBox
             // 
             this.indentsNumBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.indentsNumBox.Location = new System.Drawing.Point(931, 70);
+            this.indentsNumBox.Location = new System.Drawing.Point(923, 70);
             this.indentsNumBox.Name = "indentsNumBox";
             this.indentsNumBox.Size = new System.Drawing.Size(43, 20);
             this.indentsNumBox.TabIndex = 22;
@@ -416,12 +417,25 @@
             this.missingConfigWarnLabel.Text = "Config.xml Not Found!";
             this.missingConfigWarnLabel.Visible = false;
             // 
+            // discardObjectsCheckBox
+            // 
+            this.discardObjectsCheckBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.discardObjectsCheckBox.AutoSize = true;
+            this.discardObjectsCheckBox.Location = new System.Drawing.Point(869, 622);
+            this.discardObjectsCheckBox.Name = "discardObjectsCheckBox";
+            this.discardObjectsCheckBox.Size = new System.Drawing.Size(101, 17);
+            this.discardObjectsCheckBox.TabIndex = 40;
+            this.discardObjectsCheckBox.Text = "Discard Objects";
+            this.discardObjectsCheckBox.UseVisualStyleBackColor = true;
+            this.discardObjectsCheckBox.CheckedChanged += new System.EventHandler(this.DiscardObjects_CheckedChanged);
+            // 
             // SQFMMForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(1051, 670);
+            this.Controls.Add(this.discardObjectsCheckBox);
             this.Controls.Add(this.missingConfigWarnLabel);
             this.Controls.Add(this.presetLabel);
             this.Controls.Add(this.presetDropDown);
@@ -499,6 +513,7 @@
         private System.Windows.Forms.Label presetLabel;
         private System.Windows.Forms.Label missingConfigWarnLabel;
         private System.Windows.Forms.ToolTip relativePosToolTip;
+        private System.Windows.Forms.CheckBox discardObjectsCheckBox;
     }
 }
 

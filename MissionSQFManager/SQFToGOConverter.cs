@@ -11,7 +11,7 @@ namespace MissionSQFManager
 {
     public class SQFToGOConverter
     {
-        public static GameObject[] SQFToGameObjects(string file)
+        public static GameObject[] SQFToGameObjects(string file, string[] vehicles)
         {
             List<GameObject> gameObjects = new List<GameObject>();
 
@@ -35,7 +35,7 @@ namespace MissionSQFManager
                         if (gameObject != null) gameObjects.Add(gameObject);
                         gameObject = new GameObject
                         {
-                            type = GameObject.Type.Vehicle
+                            type = GameObject.Type.Object
                         };
                         flag = "type";
 
@@ -66,6 +66,21 @@ namespace MissionSQFManager
 
                     int textLength = ((i - startPos) - 1);
                     gameObject.className = file.Substring(textStart, textLength);
+
+                    if (vehicles != null && gameObject.type == GameObject.Type.Object)
+                    {
+                        //Check if the object is a vehicle by comparing its classname to vehicles array
+                        for (int j = 0; j < vehicles.Length; j++)
+                        {
+                            if (gameObject.className == vehicles[j])
+                            {
+                                gameObject.type = GameObject.Type.Vehicle;
+                                break;
+                            }
+                        }
+                    }
+
+
                     flag = "classnameClose";
                     continue;
                 }

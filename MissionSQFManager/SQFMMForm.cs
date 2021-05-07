@@ -55,6 +55,28 @@ namespace MissionSQFManager
             relativePosToolTip.SetToolTip(relativePosition, "Sets object positions to be relative to this point.");
         }
 
+        private string[] GetVehiclesFromConfig()
+        {
+            if (!Utils.GetConfigXML(out XmlDocument doc)) return null;
+            var vehicles = doc.SelectSingleNode("/Config/Vehicles");
+
+            if (vehicles == null) return null;
+
+            string[] classnames = new string[vehicles.ChildNodes.Count];
+
+            for (int i = 0; i < vehicles.ChildNodes.Count; i++)
+            {
+                XmlNode classname = vehicles.ChildNodes[i];
+                if (classname == null || classname.Attributes == null) continue;
+                XmlNode cnItem = classname.Attributes.GetNamedItem("classname");
+                if (cnItem == null) continue;
+
+                classnames[i] = cnItem.InnerText;
+            }
+
+            return classnames;
+        }
+
         private bool InitializePresets()
         {
             if (!GetConfigPresets(out XmlNode presets)) return false;
@@ -178,7 +200,7 @@ namespace MissionSQFManager
                     }
 
                     fileName.Text = Path.GetFileName(openFileDialog.FileName);
-                    gameObjects = SQFToGOConverter.SQFToGameObjects(fileContent);
+                    gameObjects = SQFToGOConverter.SQFToGameObjects(fileContent, GetVehiclesFromConfig());
                     HandleGameObjectUpdate(gameObjects);
                 }
             }
@@ -266,8 +288,8 @@ namespace MissionSQFManager
                 }
             }
 
-            //Discard units or vehicles
-            if (discardUnitsCheckBox.Checked || discardVehiclesCheckBox.Checked)
+            //Filter out discarded types
+            if (discardUnitsCheckBox.Checked || discardVehiclesCheckBox.Checked || discardObjectsCheckBox.Checked)
             {
                 var filtered = new List<GameObject>();
 
@@ -276,9 +298,11 @@ namespace MissionSQFManager
                     GameObject go = objList[i];
                     bool isUnit = (go.type == GameObject.Type.Unit);
                     bool isVehicle = (go.type == GameObject.Type.Vehicle);
+                    bool isObject = (go.type == GameObject.Type.Object);
 
                     if (isUnit && !discardUnitsCheckBox.Checked) filtered.Add(go);
                     if (isVehicle && !discardVehiclesCheckBox.Checked) filtered.Add(go);
+                    if (isObject && !discardObjectsCheckBox.Checked) filtered.Add(go);
                 }
 
                 objList = filtered;
@@ -373,5 +397,7 @@ namespace MissionSQFManager
         private void ObjectPerLines_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
 
         private void RelativePosition_TextChanged(object sender, EventArgs e) => UpdatePreviewer();
+
+        private void DiscardObjects_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
     }
 }
