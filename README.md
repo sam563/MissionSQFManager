@@ -12,7 +12,7 @@ Tools for managing Arma generated SQF mission files.
 * Option to automatically sort objects by their classname
 * Option to replace object classnames from the config (This is primarily for switching map_eu classnames with their lootable and standard Arma counterparts).
 * Option for converting all positions to positions relative to either a user inputted position, or an automatically determined point (the center point of all objects)
-* Options to filter out both Units and Vehicles
+* Options to filter out Units, Vehicles and Objects
 
 ## How To
 To get started, load a file. This must be an Arma generated .SQF mission file.
@@ -50,6 +50,9 @@ Saves the current output to the selected output format.
 By default when a file is loaded the relative position field is populated by the combined center of all loaded objects.
 The user can define their own relative position by inputting each axis split with a comma.
 
+#### Find Center
+When clicked the relative position input field will automatically be determined by the center of all objects.
+
 #### Order By Class Name
 If checked the objects will be ordered alphanumerically by their classname.
 
@@ -72,8 +75,9 @@ To add a new preset, in the config use the syntax in the following example:
       <ReplaceClassnames>true</ReplaceClassnames>
       <OrderByClassname>false</OrderByClassname>
       <RelativePositions>false</RelativePositions>
+      <DiscardObjects>false</DiscardObjects>
       <DiscardUnits>true</DiscardUnits>
-      <DiscardVehicles>false</DiscardVehicles>
+      <DiscardVehicles>true</DiscardVehicles>
     </fn_spawnObjects>
 
 ```
@@ -86,6 +90,7 @@ To add a new preset, in the config use the syntax in the following example:
 * ReplaceClassnames - `Boolean` - Should the objects names be replaced by the ReplaceClassnames defined in the config?
 * OrderByClassname - `Boolean` - Should the objects be ordered by their classname alphanumerically?
 * RelativePositions - `Boolean` - Should the objects positions be set relative to the user determined / auto generated relative position?
+* DiscardObjects - `Boolean` - Should objects be discarded from the output?
 * DiscardUnits - `Boolean` - Should units be discarded from the output?
 * DiscardVehicles - `Boolean` - Should vehicles be discarded from the output?
 
