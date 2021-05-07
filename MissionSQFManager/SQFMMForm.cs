@@ -217,21 +217,25 @@ namespace MissionSQFManager
             renamedObjects = GOClassNameReplacer.ReplaceClassnamesFromConfig(gameObjects);
 
             //Find relative position
-            if (string.IsNullOrEmpty(relativePosition.Text))
+            Vector3 result = Vector3.zero;
+
+            //Calculate center pos
+            for (int i = 0; i < gameObjects.Length; i++)
             {
-                Vector3 result = Vector3.zero;
-
-                //Calculate center pos
-                for (int i = 0; i < gameObjects.Length; i++)
-                {
-                    result += (gameObjects[i].position / gameObjects.Length);
-                }
-
-                result.z = 0; //Do not average the height
-                center = result;
-
-                UpdateRelativePosition(null, null);
+                result += (gameObjects[i].position / gameObjects.Length);
             }
+
+            result.z = 0; //Do not average the height
+
+            if (string.IsNullOrEmpty(relativePosition.Text) || relativePosition.Text == center.ToString())
+            {
+                //Only update if the user has not inputted a custom relative pos
+                relativePosition.Text = result.ToString();
+            }
+
+            //relativePosition.Text = result.ToString();
+
+            center = result;
         }
 
         private void UpdateRelativePosition(object sender, EventArgs e)
@@ -360,6 +364,11 @@ namespace MissionSQFManager
         {
             relativePosition.Enabled = relativePosCheckBox.Checked; //Field enabled is determined by checkbox
             UpdatePreviewer();
+        }
+
+        private void RelativeFindCenter_Click(object sender, EventArgs e)
+        {
+            relativePosition.Text = center.ToString();
         }
 
         private void Prefix_CheckedChanged(object sender, EventArgs e)

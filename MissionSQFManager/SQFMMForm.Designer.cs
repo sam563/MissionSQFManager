@@ -66,6 +66,7 @@
             this.missingConfigWarnLabel = new System.Windows.Forms.Label();
             this.relativePosToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.discardObjectsCheckBox = new System.Windows.Forms.CheckBox();
+            this.relativeFindCenterButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.indentsNumBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -429,12 +430,23 @@
             this.discardObjectsCheckBox.UseVisualStyleBackColor = true;
             this.discardObjectsCheckBox.CheckedChanged += new System.EventHandler(this.DiscardObjects_CheckedChanged);
             // 
+            // relativeFindCenterButton
+            // 
+            this.relativeFindCenterButton.Location = new System.Drawing.Point(542, 625);
+            this.relativeFindCenterButton.Name = "relativeFindCenterButton";
+            this.relativeFindCenterButton.Size = new System.Drawing.Size(75, 23);
+            this.relativeFindCenterButton.TabIndex = 41;
+            this.relativeFindCenterButton.Text = "Find Center";
+            this.relativeFindCenterButton.UseVisualStyleBackColor = true;
+            this.relativeFindCenterButton.Click += new System.EventHandler(this.RelativeFindCenter_Click);
+            // 
             // SQFMMForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(1051, 670);
+            this.Controls.Add(this.relativeFindCenterButton);
             this.Controls.Add(this.discardObjectsCheckBox);
             this.Controls.Add(this.missingConfigWarnLabel);
             this.Controls.Add(this.presetLabel);
@@ -514,6 +526,7 @@
         private System.Windows.Forms.Label missingConfigWarnLabel;
         private System.Windows.Forms.ToolTip relativePosToolTip;
         private System.Windows.Forms.CheckBox discardObjectsCheckBox;
+        private System.Windows.Forms.Button relativeFindCenterButton;
     }
 }
 
