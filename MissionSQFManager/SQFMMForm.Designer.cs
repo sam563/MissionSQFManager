@@ -432,6 +432,7 @@
             // 
             // relativeFindCenterButton
             // 
+            this.relativeFindCenterButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.relativeFindCenterButton.Location = new System.Drawing.Point(542, 625);
             this.relativeFindCenterButton.Name = "relativeFindCenterButton";
             this.relativeFindCenterButton.Size = new System.Drawing.Size(75, 23);
