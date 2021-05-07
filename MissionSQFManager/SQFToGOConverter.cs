@@ -140,7 +140,7 @@ namespace MissionSQFManager
                 if (flag == "endDirection" && cur == 's')
                 {
                     string init = "setVehicleInit";
-                    if (file.Length >= ((i - 1) + init.Length))
+                    if (file.Length >= (i + init.Length))
                     {
                         string s = file.Substring(i, init.Length);
                         if (s == init)

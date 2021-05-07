@@ -47,6 +47,8 @@ namespace MissionSQFManager
                 presetLabel.Visible = false;
             }
 
+            UpdateFilters();
+
             //Tool tips
             sortByClassToolTip.SetToolTip(sortByNamesCheckBox, "Orders objects by their classname alphanumerically.");
             replaceClassnamesToolTip.SetToolTip(replaceClassnamesCheckBox, "Replaces all classnames as defined in config. (Primarily for replacing MAP objects with their lootable counterparts)");
@@ -217,26 +219,54 @@ namespace MissionSQFManager
             //This only needs to be done once when the file is first loaded
             renamedObjects = GOClassNameReplacer.ReplaceClassnamesFromConfig(gameObjects);
 
-            //Find relative position
-            Vector3 result = Vector3.zero;
-
-            //Calculate center pos
+            Vector3 center = Vector3.zero;
             for (int i = 0; i < gameObjects.Length; i++)
             {
-                result += (gameObjects[i].position / gameObjects.Length);
+                //Calculate center pos
+                center += (gameObjects[i].position / gameObjects.Length);
             }
+            center.z = 0; //Do not average the height
 
-            result.z = 0; //Do not average the height
-
-            if (string.IsNullOrEmpty(relativePosition.Text) || relativePosition.Text == center.ToString())
+            if (string.IsNullOrEmpty(relativePosition.Text) || relativePosition.Text == this.center.ToString())
             {
                 //Only update if the user has not inputted a custom relative pos
-                relativePosition.Text = result.ToString();
+                relativePosition.Text = center.ToString();
             }
 
-            //relativePosition.Text = result.ToString();
+            this.center = center;
 
-            center = result;
+            UpdateFilters();
+        }
+
+        private void UpdateFilters()
+        {
+            int objCount = 0;
+            int vehCount = 0;
+            int unitCount = 0;
+
+            if (gameObjects != null)
+            {
+                for (int i = 0; i < gameObjects.Length; i++)
+                {
+                    //Add object type to correct counter
+                    switch (gameObjects[i].type)
+                    {
+                        case GameObject.Type.Unit:
+                            unitCount++;
+                            break;
+                        case GameObject.Type.Vehicle:
+                            vehCount++;
+                            break;
+                        default:
+                            objCount++;
+                            break;
+                    }
+                }
+            }
+
+            discardObjectsCheckBox.Enabled = (objCount > 0);
+            discardVehiclesCheckBox.Enabled = (vehCount > 0);
+            discardUnitsCheckBox.Enabled = (unitCount > 0);
         }
 
         private void UpdateRelativePosition(object sender, EventArgs e)
