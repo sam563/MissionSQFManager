@@ -133,6 +133,7 @@ namespace MissionSQFManager
             if (bool.TryParse(GetNodeText("OrderByClassname"), out bool obc)) sortByNamesCheckBox.Checked = obc;
             if (bool.TryParse(GetNodeText("RelativePositions"), out bool rp)) relativePosCheckBox.Checked = rp;
             relativePosition.Enabled = rp;
+            if (bool.TryParse(GetNodeText("DiscardObjects"), out bool doj)) discardObjectsCheckBox.Checked = doj;
             if (bool.TryParse(GetNodeText("DiscardUnits"), out bool du)) discardUnitsCheckBox.Checked = du;
             if (bool.TryParse(GetNodeText("DiscardVehicles"), out bool dv)) discardVehiclesCheckBox.Checked = dv;
 

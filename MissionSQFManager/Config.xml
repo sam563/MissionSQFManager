@@ -10,6 +10,7 @@
       <ReplaceClassnames>false</ReplaceClassnames>
       <OrderByClassname>false</OrderByClassname>
       <RelativePositions>false</RelativePositions>
+      <DiscardObjects>false</DiscardObjects>
       <DiscardUnits>false</DiscardUnits>
       <DiscardVehicles>false</DiscardVehicles>
     </Default>
@@ -22,8 +23,9 @@
       <ReplaceClassnames>true</ReplaceClassnames>
       <OrderByClassname>false</OrderByClassname>
       <RelativePositions>true</RelativePositions>
+      <DiscardObjects>false</DiscardObjects>
       <DiscardUnits>true</DiscardUnits>
-      <DiscardVehicles>false</DiscardVehicles>
+      <DiscardVehicles>true</DiscardVehicles>
     </DZMSSpawnObjects>
 
     <wai_spawnObjects>
@@ -34,8 +36,9 @@
       <ReplaceClassnames>true</ReplaceClassnames>
       <OrderByClassname>false</OrderByClassname>
       <RelativePositions>true</RelativePositions>
+      <DiscardObjects>false</DiscardObjects>
       <DiscardUnits>true</DiscardUnits>
-      <DiscardVehicles>false</DiscardVehicles>
+      <DiscardVehicles>true</DiscardVehicles>
     </wai_spawnObjects>
 
     <fn_spawnObjects>
@@ -46,8 +49,9 @@
       <ReplaceClassnames>true</ReplaceClassnames>
       <OrderByClassname>false</OrderByClassname>
       <RelativePositions>false</RelativePositions>
+      <DiscardObjects>false</DiscardObjects>
       <DiscardUnits>true</DiscardUnits>
-      <DiscardVehicles>false</DiscardVehicles>
+      <DiscardVehicles>true</DiscardVehicles>
     </fn_spawnObjects>
   </Presets>
 
