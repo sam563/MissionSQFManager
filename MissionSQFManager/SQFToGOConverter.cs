@@ -1,71 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 
 namespace MissionSQFManager
 {
     public class SQFToGOConverter
     {
-        public static GameObject[] SQFToGameObjects(string file, string[] vehicles)
+        //Keywords used to check for points of interest within the SQF file
+        private const string vehicleKeyword = "createVehicle";
+        private const string unitKeyword = "createUnit";
+        private const string directionKeyword = "setDir";
+        private const string initKeyword = "setVehicleInit";
+
+        public static GameObject[] SQFToGameObjects(string sqf)
         {
-            List<GameObject> gameObjects = new List<GameObject>();
+            List<GameObject> gameObjects = new List<GameObject>(); //All gameobjects extracted from the inputted SQF
 
-            GameObject gameObject = null; //Current
+            GameObject gameObject = null; //Current gameobject we're putting together
 
-            string flag = string.Empty;
+            ReferencePoint state = ReferencePoint.Default; //A flag to mark the state so we know what we're currently looking for
 
-            int startPos = -1;
+            int startPos = -1; //The index of the position in the file at which marks the start of the desired value within the SQF
 
-            for (int i = 0; i < file.Length; i++)
+            for (int i = 0; i < sqf.Length; i++)
             {
-                char cur = file[i];
+                char currentChar = sqf[i];
 
-                if (cur == 'c')
+                if (currentChar == 'c')
                 {
-                    string vehicle = "createVehicle";
-                    string unit = "createUnit";
-
-                    if (((i + vehicle.Length) <= file.Length) && (file.Substring(i, vehicle.Length) == vehicle))
+                    if (((i + vehicleKeyword.Length) <= sqf.Length) && (sqf.Substring(i, vehicleKeyword.Length) == vehicleKeyword))
                     {
                         if (gameObject != null) gameObjects.Add(gameObject);
                         gameObject = new GameObject
                         {
                             type = GameObject.Type.Object
                         };
-                        flag = "type";
+                        state = ReferencePoint.Type;
 
                         continue;
                     }
-                    else if (((i + unit.Length) <= file.Length) && (file.Substring(i, unit.Length) == unit))
+                    else if (((i + unitKeyword.Length) <= sqf.Length) && (sqf.Substring(i, unitKeyword.Length) == unitKeyword))
                     {
                         if (gameObject != null) gameObjects.Add(gameObject);
                         gameObject = new GameObject
                         {
                             type = GameObject.Type.Unit
                         };
-                        flag = "type";
+                        state = ReferencePoint.Type;
                         continue;
                     }
                 }
 
-                if (flag == "type" && cur == '"')
+                if (state == ReferencePoint.Type && currentChar == '"')
                 {
                     startPos = i;
-                    flag = "classnameOpen";
+                    state = ReferencePoint.ClassnameStart;
                     continue;
                 }
 
-                if (flag == "classnameOpen" && cur == '"')
+                if (state == ReferencePoint.ClassnameStart && currentChar == '"')
                 {
                     int textStart = startPos + 1;
 
                     int textLength = ((i - startPos) - 1);
-                    gameObject.className = file.Substring(textStart, textLength);
+                    gameObject.className = sqf.Substring(textStart, textLength);
+
+                    string[] vehicles = Utils.GetAllVehicleClassnames();
 
                     if (vehicles != null && gameObject.type == GameObject.Type.Object)
                     {
@@ -80,98 +78,104 @@ namespace MissionSQFManager
                         }
                     }
 
-
-                    flag = "classnameClose";
+                    state = ReferencePoint.ClassnameEnd;
                     continue;
                 }
 
-                
-                if (flag == "classnameClose" && cur == '[')
+                if (state == ReferencePoint.ClassnameEnd && currentChar == '[')
                 {
                     startPos = i;
-                    flag = "positionOpen";
+                    state = ReferencePoint.PositionStart;
                     continue;
                 }
 
-                if (flag == "positionOpen" && cur == ']')
+                if (state == ReferencePoint.PositionStart && currentChar == ']')
                 {
-                    string position = file.Substring((startPos + 1), (i - (startPos + 1)));
+                    string position = sqf.Substring((startPos + 1), (i - (startPos + 1)));
 
                     if (Vector3.TryParse(position, out Vector3 result))
                     {
                         gameObject.position = result;
-                        flag = "positionClose";
+                        state = ReferencePoint.PositionEnd;
                         startPos = -1;
                         continue;
                     }
                 }
 
                 
-                if (flag == "positionClose" && cur == 's')
+                if (state == ReferencePoint.PositionEnd && currentChar == 's')
                 {
-                    string dir = "setDir";
-                    string s = file.Substring(i, dir.Length);
+                    string s = sqf.Substring(i, directionKeyword.Length);
 
-                    if (s == dir)
+                    if (s == directionKeyword)
                     {
-                        flag = "setDir";
+                        state = ReferencePoint.DirectionStart;
+                        startPos = i + directionKeyword.Length + 1;
                         continue;
                     }
                 }
 
-                if (flag == "setDir" && startPos < 0 && (char.IsDigit(cur) || cur == '-'))
+                if (state == ReferencePoint.DirectionStart && startPos > 0 && currentChar == ';')
                 {
-                    startPos = i;
-                    flag = "startDirection";
-                    continue;
-                }
-
-                if (flag == "startDirection" && startPos > 0 && cur == ';')
-                {
-                    string s = file.Substring(startPos, i - startPos);
+                    string s = sqf.Substring(startPos, i - startPos);
                     if (float.TryParse(s, out float dir))
                     {
                         gameObject.direction = dir;
                         startPos = -1;
-                        flag = "endDirection";
+                        state = ReferencePoint.DirectionEnd;
                     }
                 }
                 
-                if (flag == "endDirection" && cur == 's')
+                if (state == ReferencePoint.DirectionEnd && currentChar == 's')
                 {
-                    string init = "setVehicleInit";
-                    if (file.Length >= (i + init.Length))
+                    if (sqf.Length >= (i + initKeyword.Length))
                     {
-                        string s = file.Substring(i, init.Length);
-                        if (s == init)
+                        string s = sqf.Substring(i, initKeyword.Length);
+                        if (s == initKeyword)
                         {
-                            flag = "init";
+                            state = ReferencePoint.InitStart;
                             continue;
                         }
                     }
                 }
                 
-                if (flag == "init" && cur == '"')
+                if (state == ReferencePoint.InitStart && currentChar == '"')
                 {
                     startPos = i;
-                    flag = "initClose";
+                    state = ReferencePoint.InitEnd;
                     continue;
                 }
 
                 
-                if (flag == "initClose" && cur == ';')
+                if (state == ReferencePoint.InitEnd && currentChar == ';')
                 {
-                    string s = file.Substring((startPos + 1), (i - startPos));
+                    string s = sqf.Substring((startPos + 1), (i - startPos));
                     gameObject.init = s;
 
-                    flag = string.Empty;
+                    state = ReferencePoint.Default;
                     startPos = -1;
 
                     continue;
                 }
             }
 
+            if (gameObject != null) gameObjects.Add(gameObject); //We will never loop back around to another classname so add the gameobject in progress!
+
             return gameObjects.ToArray();
+        }
+
+        private enum ReferencePoint
+        {
+            Default,
+            Type,
+            ClassnameStart,
+            ClassnameEnd,
+            PositionStart,
+            PositionEnd,
+            DirectionStart,
+            DirectionEnd,
+            InitStart,
+            InitEnd
         }
     }
 }

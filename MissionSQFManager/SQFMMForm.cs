@@ -1,16 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Diagnostics;
 using System.Xml;
-using System.Threading;
 
 namespace MissionSQFManager
 {
@@ -26,7 +19,7 @@ namespace MissionSQFManager
         {
             InitializeComponent();
 
-            objectsList.HorizontalScrollbar = false; //Has huge performance impact Do not enable!!
+            objectsList.HorizontalScrollbar = false; //Has huge performance impact. Do not enable!!
 
             bool configExists = InitializePresets();
             missingConfigWarnLabel.Visible = !configExists;
@@ -55,28 +48,6 @@ namespace MissionSQFManager
             loadFileToolTip.SetToolTip(openFileButton, "Load Arma generated .sqf mission file for the program to read from.");
             saveFileToolTip.SetToolTip(saveOutputButton, "Save generated output in the selected format.");
             relativePosToolTip.SetToolTip(relativePosition, "Sets object positions to be relative to this point.");
-        }
-
-        private string[] GetVehiclesFromConfig()
-        {
-            if (!Utils.GetConfigXML(out XmlDocument doc)) return null;
-            var vehicles = doc.SelectSingleNode("/Config/Vehicles");
-
-            if (vehicles == null) return null;
-
-            string[] classnames = new string[vehicles.ChildNodes.Count];
-
-            for (int i = 0; i < vehicles.ChildNodes.Count; i++)
-            {
-                XmlNode classname = vehicles.ChildNodes[i];
-                if (classname == null || classname.Attributes == null) continue;
-                XmlNode cnItem = classname.Attributes.GetNamedItem("classname");
-                if (cnItem == null) continue;
-
-                classnames[i] = cnItem.InnerText;
-            }
-
-            return classnames;
         }
 
         private bool InitializePresets()
@@ -203,7 +174,7 @@ namespace MissionSQFManager
                     }
 
                     fileName.Text = Path.GetFileName(openFileDialog.FileName);
-                    gameObjects = SQFToGOConverter.SQFToGameObjects(fileContent, GetVehiclesFromConfig());
+                    gameObjects = SQFToGOConverter.SQFToGameObjects(fileContent);
                     HandleGameObjectUpdate(gameObjects);
                 }
             }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace MissionSQFManager
 {
@@ -113,13 +108,17 @@ namespace MissionSQFManager
 
         public static bool TryParse(string s, out Vector3 result)
         {
+            //System.Diagnostics.Trace.TraceInformation($"Trying to parse string {s} to Vector3!");
+
             result = new Vector3();
 
             string[] axes = s.Split(',');
 
+            //System.Diagnostics.Trace.TraceInformation($"String split into {string.Join(", ", axes)}");
+
             if (axes.Length < 2 || axes.Length > 3)
             {
-                Trace.TraceError($"Failed to parse string {s} to Vector3, inocorrect number of axes ({axes.Length})");
+                Trace.TraceInformation($"Failed to parse string {s} to Vector3, incorrect number of axes ({axes.Length})");
                 return false;
             }
 
@@ -129,7 +128,7 @@ namespace MissionSQFManager
             }
             else
             {
-                Trace.TraceError($"Failed to parse Vector3: x axis {axes[0]} is not a float!");
+                Trace.TraceInformation($"Failed to parse Vector3: x axis {axes[0]} is not a float!");
                 return false;
             }
 
@@ -139,7 +138,7 @@ namespace MissionSQFManager
             }
             else
             {
-                Trace.TraceError($"Failed to parse Vector3: y axis {axes[1]} is not a float!");
+                Trace.TraceInformation($"Failed to parse Vector3: y axis {axes[1]} is not a float!");
                 return false;
             }
 
@@ -151,9 +150,11 @@ namespace MissionSQFManager
             }
             else
             {
-                Trace.TraceError($"Failed to parse Vector3: z axis {axes[2]} is not a float!");
+                Trace.TraceInformation($"Failed to parse Vector3: z axis {axes[2]} is not a float!");
                 return false;
             }
+
+            //System.Diagnostics.Trace.TraceInformation($"Parsed Vector3 to {result}");
 
             return true;
         }
