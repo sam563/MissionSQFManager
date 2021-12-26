@@ -56,7 +56,6 @@
             this.indentsLabel = new System.Windows.Forms.Label();
             this.indentsNumBox = new System.Windows.Forms.NumericUpDown();
             this.relativePosCheckBox = new System.Windows.Forms.CheckBox();
-            this.objectPerLinesCheckBox = new System.Windows.Forms.CheckBox();
             this.prefixCheckBox = new System.Windows.Forms.CheckBox();
             this.suffixCheckBox = new System.Windows.Forms.CheckBox();
             this.relativePosition = new System.Windows.Forms.TextBox();
@@ -67,6 +66,7 @@
             this.relativePosToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.discardObjectsCheckBox = new System.Windows.Forms.CheckBox();
             this.relativeFindCenterButton = new System.Windows.Forms.Button();
+            this.copyToClipboardButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.indentsNumBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -75,9 +75,9 @@
             this.openFileButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.openFileButton.BackColor = System.Drawing.SystemColors.ControlLight;
             this.openFileButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.openFileButton.Location = new System.Drawing.Point(75, 571);
+            this.openFileButton.Location = new System.Drawing.Point(75, 572);
             this.openFileButton.Name = "openFileButton";
-            this.openFileButton.Size = new System.Drawing.Size(99, 23);
+            this.openFileButton.Size = new System.Drawing.Size(121, 23);
             this.openFileButton.TabIndex = 0;
             this.openFileButton.Text = "Load from file";
             this.openFileButton.UseVisualStyleBackColor = false;
@@ -100,7 +100,7 @@
             this.previewModeDropDown.Items.AddRange(new object[] {
             "Output Preview",
             "Raw Object Data"});
-            this.previewModeDropDown.Location = new System.Drawing.Point(171, 620);
+            this.previewModeDropDown.Location = new System.Drawing.Point(202, 629);
             this.previewModeDropDown.Name = "previewModeDropDown";
             this.previewModeDropDown.Size = new System.Drawing.Size(121, 21);
             this.previewModeDropDown.TabIndex = 3;
@@ -125,7 +125,7 @@
             // 
             this.previewModeLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.previewModeLabel.AutoSize = true;
-            this.previewModeLabel.Location = new System.Drawing.Point(90, 623);
+            this.previewModeLabel.Location = new System.Drawing.Point(121, 632);
             this.previewModeLabel.Name = "previewModeLabel";
             this.previewModeLabel.Size = new System.Drawing.Size(75, 13);
             this.previewModeLabel.TabIndex = 5;
@@ -158,9 +158,9 @@
             this.saveOutputButton.BackColor = System.Drawing.SystemColors.ControlLight;
             this.saveOutputButton.Enabled = false;
             this.saveOutputButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.saveOutputButton.Location = new System.Drawing.Point(193, 571);
+            this.saveOutputButton.Location = new System.Drawing.Point(202, 573);
             this.saveOutputButton.Name = "saveOutputButton";
-            this.saveOutputButton.Size = new System.Drawing.Size(99, 23);
+            this.saveOutputButton.Size = new System.Drawing.Size(121, 23);
             this.saveOutputButton.TabIndex = 8;
             this.saveOutputButton.Text = "Save Output";
             this.saveOutputButton.UseVisualStyleBackColor = false;
@@ -170,7 +170,7 @@
             // 
             this.sortByNamesCheckBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.sortByNamesCheckBox.AutoSize = true;
-            this.sortByNamesCheckBox.Location = new System.Drawing.Point(319, 577);
+            this.sortByNamesCheckBox.Location = new System.Drawing.Point(350, 579);
             this.sortByNamesCheckBox.Name = "sortByNamesCheckBox";
             this.sortByNamesCheckBox.Size = new System.Drawing.Size(126, 17);
             this.sortByNamesCheckBox.TabIndex = 9;
@@ -182,7 +182,7 @@
             // 
             this.replaceClassnamesCheckBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.replaceClassnamesCheckBox.AutoSize = true;
-            this.replaceClassnamesCheckBox.Location = new System.Drawing.Point(319, 601);
+            this.replaceClassnamesCheckBox.Location = new System.Drawing.Point(350, 603);
             this.replaceClassnamesCheckBox.Name = "replaceClassnamesCheckBox";
             this.replaceClassnamesCheckBox.Size = new System.Drawing.Size(189, 17);
             this.replaceClassnamesCheckBox.TabIndex = 10;
@@ -315,29 +315,13 @@
             // 
             this.relativePosCheckBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.relativePosCheckBox.AutoSize = true;
-            this.relativePosCheckBox.Location = new System.Drawing.Point(542, 574);
+            this.relativePosCheckBox.Location = new System.Drawing.Point(573, 576);
             this.relativePosCheckBox.Name = "relativePosCheckBox";
             this.relativePosCheckBox.Size = new System.Drawing.Size(126, 17);
             this.relativePosCheckBox.TabIndex = 29;
             this.relativePosCheckBox.Text = "Positions Relative To";
             this.relativePosCheckBox.UseVisualStyleBackColor = true;
             this.relativePosCheckBox.CheckedChanged += new System.EventHandler(this.RelativePos_CheckedChanged);
-            // 
-            // objectPerLinesCheckBox
-            // 
-            this.objectPerLinesCheckBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.objectPerLinesCheckBox.AutoSize = true;
-            this.objectPerLinesCheckBox.Checked = true;
-            this.objectPerLinesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.objectPerLinesCheckBox.Location = new System.Drawing.Point(875, 33);
-            this.objectPerLinesCheckBox.Name = "objectPerLinesCheckBox";
-            this.objectPerLinesCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.objectPerLinesCheckBox.Size = new System.Drawing.Size(99, 17);
-            this.objectPerLinesCheckBox.TabIndex = 33;
-            this.objectPerLinesCheckBox.Text = "Object Per Line";
-            this.objectPerLinesCheckBox.UseVisualStyleBackColor = true;
-            this.objectPerLinesCheckBox.Visible = false;
-            this.objectPerLinesCheckBox.CheckedChanged += new System.EventHandler(this.ObjectPerLines_CheckedChanged);
             // 
             // prefixCheckBox
             // 
@@ -368,7 +352,7 @@
             // relativePosition
             // 
             this.relativePosition.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.relativePosition.Location = new System.Drawing.Point(542, 599);
+            this.relativePosition.Location = new System.Drawing.Point(573, 601);
             this.relativePosition.Name = "relativePosition";
             this.relativePosition.Size = new System.Drawing.Size(226, 20);
             this.relativePosition.TabIndex = 36;
@@ -433,7 +417,7 @@
             // relativeFindCenterButton
             // 
             this.relativeFindCenterButton.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.relativeFindCenterButton.Location = new System.Drawing.Point(542, 625);
+            this.relativeFindCenterButton.Location = new System.Drawing.Point(573, 627);
             this.relativeFindCenterButton.Name = "relativeFindCenterButton";
             this.relativeFindCenterButton.Size = new System.Drawing.Size(75, 23);
             this.relativeFindCenterButton.TabIndex = 41;
@@ -441,12 +425,26 @@
             this.relativeFindCenterButton.UseVisualStyleBackColor = true;
             this.relativeFindCenterButton.Click += new System.EventHandler(this.RelativeFindCenter_Click);
             // 
+            // copyToClipboardButton
+            // 
+            this.copyToClipboardButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.copyToClipboardButton.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.copyToClipboardButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.copyToClipboardButton.Location = new System.Drawing.Point(202, 601);
+            this.copyToClipboardButton.Name = "copyToClipboardButton";
+            this.copyToClipboardButton.Size = new System.Drawing.Size(121, 23);
+            this.copyToClipboardButton.TabIndex = 42;
+            this.copyToClipboardButton.Text = "Copy To Clipboard";
+            this.copyToClipboardButton.UseVisualStyleBackColor = false;
+            this.copyToClipboardButton.Click += new System.EventHandler(this.CopyToClipboard_Click);
+            // 
             // SQFMMForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(1051, 670);
+            this.Controls.Add(this.copyToClipboardButton);
             this.Controls.Add(this.relativeFindCenterButton);
             this.Controls.Add(this.discardObjectsCheckBox);
             this.Controls.Add(this.missingConfigWarnLabel);
@@ -455,7 +453,6 @@
             this.Controls.Add(this.relativePosition);
             this.Controls.Add(this.suffixCheckBox);
             this.Controls.Add(this.prefixCheckBox);
-            this.Controls.Add(this.objectPerLinesCheckBox);
             this.Controls.Add(this.relativePosCheckBox);
             this.Controls.Add(this.indentsNumBox);
             this.Controls.Add(this.indentsLabel);
@@ -517,7 +514,6 @@
         private System.Windows.Forms.Label indentsLabel;
         private System.Windows.Forms.NumericUpDown indentsNumBox;
         private System.Windows.Forms.CheckBox relativePosCheckBox;
-        private System.Windows.Forms.CheckBox objectPerLinesCheckBox;
         private System.Windows.Forms.CheckBox prefixCheckBox;
         private System.Windows.Forms.CheckBox suffixCheckBox;
         private System.Windows.Forms.TextBox relativePosition;
@@ -528,6 +524,7 @@
         private System.Windows.Forms.ToolTip relativePosToolTip;
         private System.Windows.Forms.CheckBox discardObjectsCheckBox;
         private System.Windows.Forms.Button relativeFindCenterButton;
+        private System.Windows.Forms.Button copyToClipboardButton;
     }
 }
 

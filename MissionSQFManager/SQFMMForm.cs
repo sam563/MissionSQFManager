@@ -130,6 +130,7 @@ namespace MissionSQFManager
 
             bool isValid = (gameObjects != null && gameObjects.Length > 0);
             saveOutputButton.Enabled = isValid;
+            copyToClipboardButton.Enabled = isValid;
 
             if (!isValid)
             {
@@ -266,6 +267,20 @@ namespace MissionSQFManager
             saveFileDialog.Dispose();
         }
 
+        private void CopyToClipboard_Click(object sender, EventArgs e)
+        {
+            string output = string.Empty;
+
+            string[] outputLines = GOToOutput(gameObjects);
+
+            for (int i = 0; i < outputLines.Length; i++)
+            {
+                output += outputLines[i] + Environment.NewLine;
+            }
+
+            Clipboard.SetText(output);
+        }
+
         private string[] GOToOutput(GameObject[] gameObjects) => GOToOutput(gameObjects, out string _);
 
         private string[] GOToOutput(GameObject[] gameObjects, out string extention)
@@ -338,7 +353,6 @@ namespace MissionSQFManager
                     string prefix = prefixCheckBox.Checked ? prefixLineInputBox.Text : "";
                     string suffix = suffixCheckBox.Checked ? suffixLineInputBox.Text : "";
                     lines = GOToFormattedSQF.FormatGameObjects(objList.ToArray(), formatInputBox.Text, (int)indentsNumBox.Value, prefix, suffix);
-                    if (!objectPerLinesCheckBox.Checked) lines = new string[] { string.Join(null, lines) };
                     extention = ".sqf";
                     break;
             }
@@ -350,7 +364,6 @@ namespace MissionSQFManager
             bool isSelected = (outputFormatDropDown.SelectedIndex == 0);
             formatInputBox.Enabled = isSelected;
             indentsNumBox.Enabled = isSelected;
-            objectPerLinesCheckBox.Enabled = isSelected;
             prefixCheckBox.Enabled = isSelected;
             suffixCheckBox.Enabled = isSelected;
 
