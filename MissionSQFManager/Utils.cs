@@ -11,7 +11,8 @@ namespace MissionSQFManager
 
         public static void DebugWindow(object msg)
         {
-            System.Windows.Forms.MessageBox.Show(msg.ToString(), "Debug");
+
+            System.Windows.Forms.MessageBox.Show(msg != null ? msg.ToString() : "Null", "Debug");
         }
 
         public static bool GetElementFromConfig(string elementTag, out string result)

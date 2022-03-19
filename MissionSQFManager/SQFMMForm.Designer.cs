@@ -67,6 +67,9 @@
             this.discardObjectsCheckBox = new System.Windows.Forms.CheckBox();
             this.relativeFindCenterButton = new System.Windows.Forms.Button();
             this.copyToClipboardButton = new System.Windows.Forms.Button();
+            this.formatHelpTitle = new System.Windows.Forms.Label();
+            this.arrayObjectsButton = new System.Windows.Forms.Button();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.indentsNumBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -214,7 +217,9 @@
             this.formatHelpBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.formatHelpBox.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.formatHelpBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.formatHelpBox.Font = new System.Drawing.Font("Microsoft JhengHei UI Light", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.formatHelpBox.FormattingEnabled = true;
+            this.formatHelpBox.ItemHeight = 14;
             this.formatHelpBox.Items.AddRange(new object[] {
             "%0 Class Name",
             "%1 Position",
@@ -227,7 +232,7 @@
             this.formatHelpBox.MultiColumn = true;
             this.formatHelpBox.Name = "formatHelpBox";
             this.formatHelpBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.formatHelpBox.Size = new System.Drawing.Size(237, 78);
+            this.formatHelpBox.Size = new System.Drawing.Size(237, 70);
             this.formatHelpBox.TabIndex = 13;
             // 
             // discardUnitsCheckBox
@@ -367,6 +372,7 @@
             this.objectsList.Name = "objectsList";
             this.objectsList.Size = new System.Drawing.Size(899, 407);
             this.objectsList.TabIndex = 1;
+            this.objectsList.SelectedIndexChanged += new System.EventHandler(this.ObjectsList_SelectedIndexChanged);
             // 
             // presetDropDown
             // 
@@ -438,12 +444,35 @@
             this.copyToClipboardButton.UseVisualStyleBackColor = false;
             this.copyToClipboardButton.Click += new System.EventHandler(this.CopyToClipboard_Click);
             // 
+            // formatHelpTitle
+            // 
+            this.formatHelpTitle.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.formatHelpTitle.AutoSize = true;
+            this.formatHelpTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.formatHelpTitle.Location = new System.Drawing.Point(307, 39);
+            this.formatHelpTitle.Name = "formatHelpTitle";
+            this.formatHelpTitle.Size = new System.Drawing.Size(81, 13);
+            this.formatHelpTitle.TabIndex = 43;
+            this.formatHelpTitle.Text = "Formatting Help";
+            // 
+            // arrayObjectsButton
+            // 
+            this.arrayObjectsButton.Location = new System.Drawing.Point(350, 629);
+            this.arrayObjectsButton.Name = "arrayObjectsButton";
+            this.arrayObjectsButton.Size = new System.Drawing.Size(102, 23);
+            this.arrayObjectsButton.TabIndex = 44;
+            this.arrayObjectsButton.Text = "Array Objects";
+            this.arrayObjectsButton.UseVisualStyleBackColor = true;
+            this.arrayObjectsButton.Click += new System.EventHandler(this.ArrayObjects_Click);
+            // 
             // SQFMMForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(1051, 670);
+            this.Controls.Add(this.arrayObjectsButton);
+            this.Controls.Add(this.formatHelpTitle);
             this.Controls.Add(this.copyToClipboardButton);
             this.Controls.Add(this.relativeFindCenterButton);
             this.Controls.Add(this.discardObjectsCheckBox);
@@ -525,6 +554,9 @@
         private System.Windows.Forms.CheckBox discardObjectsCheckBox;
         private System.Windows.Forms.Button relativeFindCenterButton;
         private System.Windows.Forms.Button copyToClipboardButton;
+        private System.Windows.Forms.Label formatHelpTitle;
+        private System.Windows.Forms.Button arrayObjectsButton;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
 

@@ -9,15 +9,33 @@ namespace MissionSQFManager
 {
     public partial class SQFMMForm : Form
     {
-        private GameObject[] gameObjects = null; //Unmodified gameObjects extracted from current loaded file
-        private GameObject[] renamedObjects = null; //gameObjects renamed from config
-        private Vector3 center = Vector3.zero; //The average position (center) of all current gameObjects
+        private static GameObject[] m_gameObjects = null; //Unmodified gameObjects extracted from current loaded file
 
-        private bool updateEnabled = true; //Should the object previewer update?
+        public static Action onGameObjectsUpdated;
+
+        public static GameObject[] GameObjects
+        {
+            get => m_gameObjects;
+
+            set
+            {
+                m_gameObjects = value;
+                onGameObjectsUpdated?.Invoke();
+            }
+        }
+
+        private GameObject[] m_renamedObjects = null; //gameObjects renamed from config
+        private Vector3 m_center = Vector3.zero; //The average position (center) of all current gameObjects
+
+        private bool m_updateEnabled = true; //Should the object previewer update?
+
+        private ArrayObjectsForm m_arrayObjectsWindow = null;
 
         public SQFMMForm()
         {
             InitializeComponent();
+
+            onGameObjectsUpdated += delegate { HandleGameObjectUpdate(GameObjects); };
 
             objectsList.HorizontalScrollbar = false; //Has huge performance impact. Do not enable!!
 
@@ -48,6 +66,8 @@ namespace MissionSQFManager
             loadFileToolTip.SetToolTip(openFileButton, "Load Arma generated .sqf mission file for the program to read from.");
             saveFileToolTip.SetToolTip(saveOutputButton, "Save generated output in the selected format.");
             relativePosToolTip.SetToolTip(relativePosition, "Sets object positions to be relative to this point.");
+
+            arrayObjectsButton.Enabled = false;
         }
 
         private bool InitializePresets()
@@ -96,7 +116,7 @@ namespace MissionSQFManager
                 }
             }
 
-            updateEnabled = false; //Disable previewer updates
+            m_updateEnabled = false; //Disable previewer updates
 
             formatInputBox.Text = GetNodeText("Format");
             prefixLineInputBox.Text = GetNodeText("Prefix");
@@ -110,7 +130,7 @@ namespace MissionSQFManager
             if (bool.TryParse(GetNodeText("DiscardUnits"), out bool du)) discardUnitsCheckBox.Checked = du;
             if (bool.TryParse(GetNodeText("DiscardVehicles"), out bool dv)) discardVehiclesCheckBox.Checked = dv;
 
-            updateEnabled = true;
+            m_updateEnabled = true;
             UpdatePreviewer();
         }
 
@@ -124,11 +144,11 @@ namespace MissionSQFManager
 
         private void UpdatePreviewer()
         {
-            if (!updateEnabled) return;
+            if (!m_updateEnabled) return;
 
             objectsList.Items.Clear();
 
-            bool isValid = (gameObjects != null && gameObjects.Length > 0);
+            bool isValid = (m_gameObjects != null && m_gameObjects.Length > 0);
             saveOutputButton.Enabled = isValid;
             copyToClipboardButton.Enabled = isValid;
 
@@ -143,7 +163,7 @@ namespace MissionSQFManager
             if (previewModeDropDown.SelectedIndex == 0)
             {
                 //Formatted object data
-                var output = GOToOutput(gameObjects);
+                var output = GOToOutput(m_gameObjects);
                 if (output == null) return;
 
                 objectsList.Items.AddRange(output);
@@ -151,8 +171,10 @@ namespace MissionSQFManager
             else
             {
                 //Raw object data
-                objectsList.Items.AddRange(gameObjects);
+                objectsList.Items.AddRange(m_gameObjects);
             }
+
+            arrayObjectsButton.Enabled = objectsList.SelectedIndex >= 0;
         }
 
         private void OpenFile_Click(object sender, EventArgs e)
@@ -175,8 +197,7 @@ namespace MissionSQFManager
                     }
 
                     fileName.Text = Path.GetFileName(openFileDialog.FileName);
-                    gameObjects = SQFToGOConverter.SQFToGameObjects(fileContent);
-                    HandleGameObjectUpdate(gameObjects);
+                    GameObjects = SQFToGOConverter.SQFToGameObjects(fileContent);
                 }
             }
 
@@ -189,7 +210,7 @@ namespace MissionSQFManager
             objectCounter.Text = $"{gameObjects.Length} objects loaded";
 
             //This only needs to be done once when the file is first loaded
-            renamedObjects = GOClassNameReplacer.ReplaceClassnamesFromConfig(gameObjects);
+            m_renamedObjects = GOClassNameReplacer.ReplaceClassnamesFromConfig(gameObjects);
 
             Vector3 center = Vector3.zero;
             for (int i = 0; i < gameObjects.Length; i++)
@@ -199,13 +220,13 @@ namespace MissionSQFManager
             }
             center.z = 0; //Do not average the height
 
-            if (string.IsNullOrEmpty(relativePosition.Text) || relativePosition.Text == this.center.ToString())
+            if (string.IsNullOrEmpty(relativePosition.Text) || relativePosition.Text == this.m_center.ToString())
             {
                 //Only update if the user has not inputted a custom relative pos
                 relativePosition.Text = center.ToString();
             }
 
-            this.center = center;
+            this.m_center = center;
 
             UpdateFilters();
         }
@@ -216,12 +237,12 @@ namespace MissionSQFManager
             int vehCount = 0;
             int unitCount = 0;
 
-            if (gameObjects != null)
+            if (m_gameObjects != null)
             {
-                for (int i = 0; i < gameObjects.Length; i++)
+                for (int i = 0; i < m_gameObjects.Length; i++)
                 {
                     //Add object type to correct counter
-                    switch (gameObjects[i].type)
+                    switch (m_gameObjects[i].type)
                     {
                         case GameObject.Type.Unit:
                             unitCount++;
@@ -243,14 +264,14 @@ namespace MissionSQFManager
 
         private void UpdateRelativePosition(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(relativePosition.Text)) relativePosition.Text = center.ToString();
+            if (string.IsNullOrEmpty(relativePosition.Text)) relativePosition.Text = m_center.ToString();
         }
 
         private void Save_Click(object sender, EventArgs e)
         {
-            if (gameObjects == null) return;
+            if (m_gameObjects == null) return;
 
-            var lines = GOToOutput(gameObjects, out string extention);
+            var lines = GOToOutput(m_gameObjects, out string extention);
 
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
@@ -271,7 +292,7 @@ namespace MissionSQFManager
         {
             string output = string.Empty;
 
-            string[] outputLines = GOToOutput(gameObjects);
+            string[] outputLines = GOToOutput(m_gameObjects);
 
             for (int i = 0; i < outputLines.Length; i++)
             {
@@ -291,7 +312,7 @@ namespace MissionSQFManager
             string[] lines;
 
             //No need to rename everytime we update
-            gameObjects = (replaceClassnamesCheckBox.Checked) ? renamedObjects : gameObjects;
+            gameObjects = (replaceClassnamesCheckBox.Checked) ? m_renamedObjects : gameObjects;
 
             var objList = gameObjects.ToList();
 
@@ -361,16 +382,17 @@ namespace MissionSQFManager
 
         private void OutputFormat_SelectedIndexChanged(object sender, EventArgs e)
         {
-            bool isSelected = (outputFormatDropDown.SelectedIndex == 0);
-            formatInputBox.Enabled = isSelected;
-            indentsNumBox.Enabled = isSelected;
-            prefixCheckBox.Enabled = isSelected;
-            suffixCheckBox.Enabled = isSelected;
+            bool isOutputSQF = (outputFormatDropDown.SelectedIndex == 0);
+            formatInputBox.Enabled = isOutputSQF;
+            indentsNumBox.Enabled = isOutputSQF;
+            prefixCheckBox.Enabled = isOutputSQF;
+            suffixCheckBox.Enabled = isOutputSQF;
 
-            prefixLineInputBox.Enabled = isSelected && prefixCheckBox.Checked;
-            suffixLineInputBox.Enabled = isSelected && suffixCheckBox.Checked;
+            prefixLineInputBox.Enabled = isOutputSQF && prefixCheckBox.Checked;
+            suffixLineInputBox.Enabled = isOutputSQF && suffixCheckBox.Checked;
 
-            formatHelpBox.Visible = isSelected;
+            formatHelpBox.Visible = isOutputSQF;
+            formatHelpTitle.Visible = isOutputSQF;
 
             UpdatePreviewer();
         }
@@ -383,7 +405,7 @@ namespace MissionSQFManager
 
         private void RelativeFindCenter_Click(object sender, EventArgs e)
         {
-            relativePosition.Text = center.ToString();
+            relativePosition.Text = m_center.ToString();
         }
 
         private void Prefix_CheckedChanged(object sender, EventArgs e)
@@ -423,5 +445,32 @@ namespace MissionSQFManager
         private void RelativePosition_TextChanged(object sender, EventArgs e) => UpdatePreviewer();
 
         private void DiscardObjects_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
+
+        private void ArrayObjects_Click(object sender, EventArgs e)
+        {
+            if (m_gameObjects == null) return;
+
+            GameObject selectedObject = m_gameObjects[objectsList.SelectedIndex];
+
+            if (selectedObject == null) return;
+
+            if (m_arrayObjectsWindow == null || m_arrayObjectsWindow.IsDisposed)
+            {
+                m_arrayObjectsWindow = new ArrayObjectsForm(selectedObject);
+            }
+            else
+            {
+                m_arrayObjectsWindow.ReferenceGameObject = selectedObject;
+            }
+
+            m_arrayObjectsWindow.Show();
+        }
+
+        private void ObjectsList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //Utils.DebugWindow(objectsList.SelectedIndex);
+
+            arrayObjectsButton.Enabled = true;
+        }
     }
 }
