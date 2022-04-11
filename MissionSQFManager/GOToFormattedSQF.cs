@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System;
 
 namespace MissionSQFManager
 {
@@ -28,7 +30,7 @@ namespace MissionSQFManager
                 string comma = (i >= (gameObjects.Length - 1)) ? "" : ",";
                 string isInit = (!string.IsNullOrEmpty(gameObject.init)) ? "true" : "false";
 
-                formatted.Add(Format($"{indents}{format}", $"\"{gameObject.className}\"", $"[{gameObject.position}]", gameObject.direction, $"\"{gameObject.init}\"", isInit, comma));
+                formatted.Add(Format($"{indents}{format}", $"\"{gameObject.className.ToString()}\"", $"[{gameObject.GetPositionAsString()}]", gameObject.GetDirectionAsString(), $"\"{gameObject.init}\"", isInit, comma));
             }
 
             if (!string.IsNullOrEmpty(suffix)) formatted.Add(suffix);

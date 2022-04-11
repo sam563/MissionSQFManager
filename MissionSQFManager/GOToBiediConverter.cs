@@ -18,9 +18,9 @@ namespace MissionSQFManager
                         $"    objectType=\"{type}\";",
                         "    class Arguments",
                         "    {",
-                        $"		POSITION=[{go.position}];",
+                        $"		POSITION=[{go.GetPositionAsString()}];",
                         $"		TYPE=\"{go.className}\";",
-                        $"		AZIMUT={go.direction};",
+                        $"		AZIMUT={go.GetDirectionAsString()};",
                     }
                 );
 

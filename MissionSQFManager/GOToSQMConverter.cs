@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace MissionSQFManager
 {
@@ -13,9 +15,9 @@ namespace MissionSQFManager
                     {
                         $"		class Item{index}",
                         "		{",
-                        $"			position[]={{{go.position.x},{go.position.z},{go.position.y}}};",
+                        $"			position[]={{{Math.Round(go.position.x, SQFMMForm.decimalPlaces).ToString(CultureInfo.InvariantCulture)},{Math.Round(go.position.x, SQFMMForm.decimalPlaces).ToString(CultureInfo.InvariantCulture)},{Math.Round(go.position.x, SQFMMForm.decimalPlaces).ToString(CultureInfo.InvariantCulture)}}};",
                         $"			special=\"NONE\";",
-                        $"			azimut=-{go.direction};",
+                        $"			azimut={go.GetDirectionAsString()};",
                         $"			id={index};",
                         $"			side=\"EMPTY\";",
                         $"			vehicle=\"{go.className}\";",

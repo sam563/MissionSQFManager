@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Globalization;
 
 namespace MissionSQFManager
 {
@@ -161,7 +163,7 @@ namespace MissionSQFManager
 
         public override string ToString()
         {
-            return ($"{x}, {y}, {z}");
+            return $"{x}, {y}, {z}";
         }
     }
 }

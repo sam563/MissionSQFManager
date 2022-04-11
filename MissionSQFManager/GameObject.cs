@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Globalization;
+using System.Linq.Expressions;
 
 namespace MissionSQFManager
 {
@@ -42,6 +44,17 @@ namespace MissionSQFManager
                 gameObject.direction,
                 gameObject.init
             );
+        }
+
+        public string GetDirectionAsString()
+        {
+            float direction = SQFMMForm.normalizeDirection ? (this.direction % 360 + 360) % 360 : this.direction;
+            return (Math.Round(direction, SQFMMForm.decimalPlaces).ToString(CultureInfo.InvariantCulture));
+        }
+
+        public string GetPositionAsString()
+        {
+            return (Math.Round(position.x, SQFMMForm.decimalPlaces).ToString(CultureInfo.InvariantCulture) + ", " + Math.Round(position.y, SQFMMForm.decimalPlaces).ToString(CultureInfo.InvariantCulture) + ", " + Math.Round(position.z, SQFMMForm.decimalPlaces).ToString(CultureInfo.InvariantCulture));
         }
 
         public override string ToString()

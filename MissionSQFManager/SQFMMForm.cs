@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -12,6 +14,9 @@ namespace MissionSQFManager
         private static GameObject[] m_gameObjects = null; //Unmodified gameObjects extracted from current loaded file
 
         public static Action onGameObjectsUpdated;
+
+        public static int decimalPlaces { get; private set; }
+        public static bool normalizeDirection { get; private set; }
 
         public static GameObject[] GameObjects
         {
@@ -33,6 +38,8 @@ namespace MissionSQFManager
 
         public SQFMMForm()
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+
             InitializeComponent();
 
             onGameObjectsUpdated += delegate { HandleGameObjectUpdate(GameObjects); };
@@ -68,6 +75,7 @@ namespace MissionSQFManager
             relativePosToolTip.SetToolTip(relativePosition, "Sets object positions to be relative to this point.");
 
             arrayObjectsButton.Enabled = false;
+            decimalPlacesInput.Value = 3;
         }
 
         private bool InitializePresets()
@@ -446,6 +454,14 @@ namespace MissionSQFManager
 
         private void DiscardObjects_CheckedChanged(object sender, EventArgs e) => UpdatePreviewer();
 
+        private void DecimalPlacesInput_ValueChanged(object sender, EventArgs e)
+        {
+            decimalPlaces = Math.Max(0, Math.Min((int)decimalPlacesInput.Value, 12));
+            decimalPlacesInput.Value = decimalPlaces;
+            UpdatePreviewer();
+        }
+
+
         private void ArrayObjects_Click(object sender, EventArgs e)
         {
             if (m_gameObjects == null) return;
@@ -471,6 +487,12 @@ namespace MissionSQFManager
             //Utils.DebugWindow(objectsList.SelectedIndex);
 
             arrayObjectsButton.Enabled = true;
+        }
+
+        private void NormalizeDirection_CheckedChanged(object sender, EventArgs e)
+        {
+            normalizeDirection = normalizeDirectionToggle.Checked;
+            UpdatePreviewer();
         }
     }
 }

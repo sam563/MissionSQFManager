@@ -70,7 +70,11 @@
             this.formatHelpTitle = new System.Windows.Forms.Label();
             this.arrayObjectsButton = new System.Windows.Forms.Button();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.decimalPlacesLabel = new System.Windows.Forms.Label();
+            this.decimalPlacesInput = new System.Windows.Forms.NumericUpDown();
+            this.normalizeDirectionToggle = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.indentsNumBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.decimalPlacesInput)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileButton
@@ -78,7 +82,7 @@
             this.openFileButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.openFileButton.BackColor = System.Drawing.SystemColors.ControlLight;
             this.openFileButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.openFileButton.Location = new System.Drawing.Point(75, 572);
+            this.openFileButton.Location = new System.Drawing.Point(61, 611);
             this.openFileButton.Name = "openFileButton";
             this.openFileButton.Size = new System.Drawing.Size(121, 23);
             this.openFileButton.TabIndex = 0;
@@ -90,7 +94,7 @@
             // 
             this.objectCounter.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.objectCounter.AutoSize = true;
-            this.objectCounter.Location = new System.Drawing.Point(72, 87);
+            this.objectCounter.Location = new System.Drawing.Point(58, 126);
             this.objectCounter.Name = "objectCounter";
             this.objectCounter.Size = new System.Drawing.Size(102, 13);
             this.objectCounter.TabIndex = 2;
@@ -103,7 +107,7 @@
             this.previewModeDropDown.Items.AddRange(new object[] {
             "Output Preview",
             "Raw Object Data"});
-            this.previewModeDropDown.Location = new System.Drawing.Point(202, 629);
+            this.previewModeDropDown.Location = new System.Drawing.Point(188, 668);
             this.previewModeDropDown.Name = "previewModeDropDown";
             this.previewModeDropDown.Size = new System.Drawing.Size(121, 21);
             this.previewModeDropDown.TabIndex = 3;
@@ -118,7 +122,7 @@
             "Formatted SQF",
             "Biedi",
             "SQM"});
-            this.outputFormatDropDown.Location = new System.Drawing.Point(152, 117);
+            this.outputFormatDropDown.Location = new System.Drawing.Point(138, 156);
             this.outputFormatDropDown.Name = "outputFormatDropDown";
             this.outputFormatDropDown.Size = new System.Drawing.Size(142, 21);
             this.outputFormatDropDown.TabIndex = 4;
@@ -128,7 +132,7 @@
             // 
             this.previewModeLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.previewModeLabel.AutoSize = true;
-            this.previewModeLabel.Location = new System.Drawing.Point(121, 632);
+            this.previewModeLabel.Location = new System.Drawing.Point(107, 671);
             this.previewModeLabel.Name = "previewModeLabel";
             this.previewModeLabel.Size = new System.Drawing.Size(75, 13);
             this.previewModeLabel.TabIndex = 5;
@@ -138,7 +142,7 @@
             // 
             this.outputFormatLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.outputFormatLabel.AutoSize = true;
-            this.outputFormatLabel.Location = new System.Drawing.Point(71, 122);
+            this.outputFormatLabel.Location = new System.Drawing.Point(57, 161);
             this.outputFormatLabel.Name = "outputFormatLabel";
             this.outputFormatLabel.Size = new System.Drawing.Size(74, 13);
             this.outputFormatLabel.TabIndex = 6;
@@ -149,7 +153,7 @@
             this.fileName.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.fileName.AutoSize = true;
             this.fileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fileName.Location = new System.Drawing.Point(72, 64);
+            this.fileName.Location = new System.Drawing.Point(58, 103);
             this.fileName.Name = "fileName";
             this.fileName.Size = new System.Drawing.Size(73, 15);
             this.fileName.TabIndex = 7;
@@ -161,7 +165,7 @@
             this.saveOutputButton.BackColor = System.Drawing.SystemColors.ControlLight;
             this.saveOutputButton.Enabled = false;
             this.saveOutputButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.saveOutputButton.Location = new System.Drawing.Point(202, 573);
+            this.saveOutputButton.Location = new System.Drawing.Point(188, 612);
             this.saveOutputButton.Name = "saveOutputButton";
             this.saveOutputButton.Size = new System.Drawing.Size(121, 23);
             this.saveOutputButton.TabIndex = 8;
@@ -173,7 +177,7 @@
             // 
             this.sortByNamesCheckBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.sortByNamesCheckBox.AutoSize = true;
-            this.sortByNamesCheckBox.Location = new System.Drawing.Point(350, 579);
+            this.sortByNamesCheckBox.Location = new System.Drawing.Point(336, 618);
             this.sortByNamesCheckBox.Name = "sortByNamesCheckBox";
             this.sortByNamesCheckBox.Size = new System.Drawing.Size(126, 17);
             this.sortByNamesCheckBox.TabIndex = 9;
@@ -185,7 +189,7 @@
             // 
             this.replaceClassnamesCheckBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.replaceClassnamesCheckBox.AutoSize = true;
-            this.replaceClassnamesCheckBox.Location = new System.Drawing.Point(350, 603);
+            this.replaceClassnamesCheckBox.Location = new System.Drawing.Point(336, 642);
             this.replaceClassnamesCheckBox.Name = "replaceClassnamesCheckBox";
             this.replaceClassnamesCheckBox.Size = new System.Drawing.Size(189, 17);
             this.replaceClassnamesCheckBox.TabIndex = 10;
@@ -196,7 +200,7 @@
             // formatInputBox
             // 
             this.formatInputBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.formatInputBox.Location = new System.Drawing.Point(619, 70);
+            this.formatInputBox.Location = new System.Drawing.Point(605, 109);
             this.formatInputBox.Name = "formatInputBox";
             this.formatInputBox.Size = new System.Drawing.Size(226, 20);
             this.formatInputBox.TabIndex = 11;
@@ -206,7 +210,7 @@
             // 
             this.formatLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.formatLabel.AutoSize = true;
-            this.formatLabel.Location = new System.Drawing.Point(574, 73);
+            this.formatLabel.Location = new System.Drawing.Point(560, 112);
             this.formatLabel.Name = "formatLabel";
             this.formatLabel.Size = new System.Drawing.Size(39, 13);
             this.formatLabel.TabIndex = 12;
@@ -227,7 +231,7 @@
             "%3 Init",
             "%4 Has Init (bool: has init = true, no init = false)",
             "%5 Comma (Applies to all entries but last)"});
-            this.formatHelpBox.Location = new System.Drawing.Point(310, 60);
+            this.formatHelpBox.Location = new System.Drawing.Point(296, 99);
             this.formatHelpBox.Margin = new System.Windows.Forms.Padding(10);
             this.formatHelpBox.MultiColumn = true;
             this.formatHelpBox.Name = "formatHelpBox";
@@ -239,7 +243,7 @@
             // 
             this.discardUnitsCheckBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.discardUnitsCheckBox.AutoSize = true;
-            this.discardUnitsCheckBox.Location = new System.Drawing.Point(869, 576);
+            this.discardUnitsCheckBox.Location = new System.Drawing.Point(855, 615);
             this.discardUnitsCheckBox.Name = "discardUnitsCheckBox";
             this.discardUnitsCheckBox.Size = new System.Drawing.Size(89, 17);
             this.discardUnitsCheckBox.TabIndex = 14;
@@ -251,7 +255,7 @@
             // 
             this.discardVehiclesCheckBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.discardVehiclesCheckBox.AutoSize = true;
-            this.discardVehiclesCheckBox.Location = new System.Drawing.Point(869, 599);
+            this.discardVehiclesCheckBox.Location = new System.Drawing.Point(855, 638);
             this.discardVehiclesCheckBox.Name = "discardVehiclesCheckBox";
             this.discardVehiclesCheckBox.Size = new System.Drawing.Size(105, 17);
             this.discardVehiclesCheckBox.TabIndex = 15;
@@ -262,7 +266,7 @@
             // prefixLineInputBox
             // 
             this.prefixLineInputBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.prefixLineInputBox.Location = new System.Drawing.Point(619, 96);
+            this.prefixLineInputBox.Location = new System.Drawing.Point(605, 135);
             this.prefixLineInputBox.Name = "prefixLineInputBox";
             this.prefixLineInputBox.Size = new System.Drawing.Size(323, 20);
             this.prefixLineInputBox.TabIndex = 16;
@@ -271,7 +275,7 @@
             // suffixLineInputBox
             // 
             this.suffixLineInputBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.suffixLineInputBox.Location = new System.Drawing.Point(619, 122);
+            this.suffixLineInputBox.Location = new System.Drawing.Point(605, 161);
             this.suffixLineInputBox.Name = "suffixLineInputBox";
             this.suffixLineInputBox.Size = new System.Drawing.Size(323, 20);
             this.suffixLineInputBox.TabIndex = 17;
@@ -281,7 +285,7 @@
             // 
             this.prefixLineLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.prefixLineLabel.AutoSize = true;
-            this.prefixLineLabel.Location = new System.Drawing.Point(557, 97);
+            this.prefixLineLabel.Location = new System.Drawing.Point(543, 136);
             this.prefixLineLabel.Name = "prefixLineLabel";
             this.prefixLineLabel.Size = new System.Drawing.Size(56, 13);
             this.prefixLineLabel.TabIndex = 18;
@@ -291,7 +295,7 @@
             // 
             this.suffixLineLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.suffixLineLabel.AutoSize = true;
-            this.suffixLineLabel.Location = new System.Drawing.Point(557, 125);
+            this.suffixLineLabel.Location = new System.Drawing.Point(543, 164);
             this.suffixLineLabel.Name = "suffixLineLabel";
             this.suffixLineLabel.Size = new System.Drawing.Size(56, 13);
             this.suffixLineLabel.TabIndex = 19;
@@ -301,7 +305,7 @@
             // 
             this.indentsLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.indentsLabel.AutoSize = true;
-            this.indentsLabel.Location = new System.Drawing.Point(853, 72);
+            this.indentsLabel.Location = new System.Drawing.Point(839, 111);
             this.indentsLabel.Name = "indentsLabel";
             this.indentsLabel.Size = new System.Drawing.Size(65, 13);
             this.indentsLabel.TabIndex = 21;
@@ -310,7 +314,7 @@
             // indentsNumBox
             // 
             this.indentsNumBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.indentsNumBox.Location = new System.Drawing.Point(923, 70);
+            this.indentsNumBox.Location = new System.Drawing.Point(909, 109);
             this.indentsNumBox.Name = "indentsNumBox";
             this.indentsNumBox.Size = new System.Drawing.Size(43, 20);
             this.indentsNumBox.TabIndex = 22;
@@ -320,7 +324,7 @@
             // 
             this.relativePosCheckBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.relativePosCheckBox.AutoSize = true;
-            this.relativePosCheckBox.Location = new System.Drawing.Point(573, 576);
+            this.relativePosCheckBox.Location = new System.Drawing.Point(559, 615);
             this.relativePosCheckBox.Name = "relativePosCheckBox";
             this.relativePosCheckBox.Size = new System.Drawing.Size(126, 17);
             this.relativePosCheckBox.TabIndex = 29;
@@ -334,7 +338,7 @@
             this.prefixCheckBox.AutoSize = true;
             this.prefixCheckBox.Checked = true;
             this.prefixCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.prefixCheckBox.Location = new System.Drawing.Point(949, 97);
+            this.prefixCheckBox.Location = new System.Drawing.Point(935, 136);
             this.prefixCheckBox.Name = "prefixCheckBox";
             this.prefixCheckBox.Size = new System.Drawing.Size(15, 14);
             this.prefixCheckBox.TabIndex = 34;
@@ -347,7 +351,7 @@
             this.suffixCheckBox.AutoSize = true;
             this.suffixCheckBox.Checked = true;
             this.suffixCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.suffixCheckBox.Location = new System.Drawing.Point(949, 125);
+            this.suffixCheckBox.Location = new System.Drawing.Point(935, 164);
             this.suffixCheckBox.Name = "suffixCheckBox";
             this.suffixCheckBox.Size = new System.Drawing.Size(15, 14);
             this.suffixCheckBox.TabIndex = 35;
@@ -357,7 +361,7 @@
             // relativePosition
             // 
             this.relativePosition.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.relativePosition.Location = new System.Drawing.Point(573, 601);
+            this.relativePosition.Location = new System.Drawing.Point(559, 640);
             this.relativePosition.Name = "relativePosition";
             this.relativePosition.Size = new System.Drawing.Size(226, 20);
             this.relativePosition.TabIndex = 36;
@@ -367,7 +371,7 @@
             // 
             this.objectsList.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.objectsList.FormattingEnabled = true;
-            this.objectsList.Location = new System.Drawing.Point(75, 149);
+            this.objectsList.Location = new System.Drawing.Point(61, 188);
             this.objectsList.MaximumSize = new System.Drawing.Size(1000, 1000);
             this.objectsList.Name = "objectsList";
             this.objectsList.Size = new System.Drawing.Size(899, 407);
@@ -379,7 +383,7 @@
             this.presetDropDown.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.presetDropDown.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.presetDropDown.FormattingEnabled = true;
-            this.presetDropDown.Location = new System.Drawing.Point(703, 31);
+            this.presetDropDown.Location = new System.Drawing.Point(689, 70);
             this.presetDropDown.Name = "presetDropDown";
             this.presetDropDown.Size = new System.Drawing.Size(142, 21);
             this.presetDropDown.TabIndex = 37;
@@ -389,7 +393,7 @@
             // 
             this.presetLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.presetLabel.AutoSize = true;
-            this.presetLabel.Location = new System.Drawing.Point(658, 33);
+            this.presetLabel.Location = new System.Drawing.Point(644, 72);
             this.presetLabel.Name = "presetLabel";
             this.presetLabel.Size = new System.Drawing.Size(37, 13);
             this.presetLabel.TabIndex = 38;
@@ -401,7 +405,7 @@
             this.missingConfigWarnLabel.AutoSize = true;
             this.missingConfigWarnLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.missingConfigWarnLabel.ForeColor = System.Drawing.Color.IndianRed;
-            this.missingConfigWarnLabel.Location = new System.Drawing.Point(72, 31);
+            this.missingConfigWarnLabel.Location = new System.Drawing.Point(58, 70);
             this.missingConfigWarnLabel.Name = "missingConfigWarnLabel";
             this.missingConfigWarnLabel.Size = new System.Drawing.Size(166, 17);
             this.missingConfigWarnLabel.TabIndex = 39;
@@ -412,7 +416,7 @@
             // 
             this.discardObjectsCheckBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.discardObjectsCheckBox.AutoSize = true;
-            this.discardObjectsCheckBox.Location = new System.Drawing.Point(869, 622);
+            this.discardObjectsCheckBox.Location = new System.Drawing.Point(855, 661);
             this.discardObjectsCheckBox.Name = "discardObjectsCheckBox";
             this.discardObjectsCheckBox.Size = new System.Drawing.Size(101, 17);
             this.discardObjectsCheckBox.TabIndex = 40;
@@ -423,7 +427,7 @@
             // relativeFindCenterButton
             // 
             this.relativeFindCenterButton.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.relativeFindCenterButton.Location = new System.Drawing.Point(573, 627);
+            this.relativeFindCenterButton.Location = new System.Drawing.Point(559, 667);
             this.relativeFindCenterButton.Name = "relativeFindCenterButton";
             this.relativeFindCenterButton.Size = new System.Drawing.Size(75, 23);
             this.relativeFindCenterButton.TabIndex = 41;
@@ -436,7 +440,7 @@
             this.copyToClipboardButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.copyToClipboardButton.BackColor = System.Drawing.SystemColors.ControlLight;
             this.copyToClipboardButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.copyToClipboardButton.Location = new System.Drawing.Point(202, 601);
+            this.copyToClipboardButton.Location = new System.Drawing.Point(188, 640);
             this.copyToClipboardButton.Name = "copyToClipboardButton";
             this.copyToClipboardButton.Size = new System.Drawing.Size(121, 23);
             this.copyToClipboardButton.TabIndex = 42;
@@ -449,7 +453,7 @@
             this.formatHelpTitle.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.formatHelpTitle.AutoSize = true;
             this.formatHelpTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.formatHelpTitle.Location = new System.Drawing.Point(307, 39);
+            this.formatHelpTitle.Location = new System.Drawing.Point(293, 78);
             this.formatHelpTitle.Name = "formatHelpTitle";
             this.formatHelpTitle.Size = new System.Drawing.Size(81, 13);
             this.formatHelpTitle.TabIndex = 43;
@@ -457,7 +461,8 @@
             // 
             // arrayObjectsButton
             // 
-            this.arrayObjectsButton.Location = new System.Drawing.Point(350, 629);
+            this.arrayObjectsButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.arrayObjectsButton.Location = new System.Drawing.Point(336, 668);
             this.arrayObjectsButton.Name = "arrayObjectsButton";
             this.arrayObjectsButton.Size = new System.Drawing.Size(102, 23);
             this.arrayObjectsButton.TabIndex = 44;
@@ -465,12 +470,46 @@
             this.arrayObjectsButton.UseVisualStyleBackColor = true;
             this.arrayObjectsButton.Click += new System.EventHandler(this.ArrayObjects_Click);
             // 
+            // decimalPlacesLabel
+            // 
+            this.decimalPlacesLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.decimalPlacesLabel.AutoSize = true;
+            this.decimalPlacesLabel.Location = new System.Drawing.Point(561, 710);
+            this.decimalPlacesLabel.Name = "decimalPlacesLabel";
+            this.decimalPlacesLabel.Size = new System.Drawing.Size(80, 13);
+            this.decimalPlacesLabel.TabIndex = 46;
+            this.decimalPlacesLabel.Text = "Decimal Places";
+            // 
+            // decimalPlacesInput
+            // 
+            this.decimalPlacesInput.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.decimalPlacesInput.Location = new System.Drawing.Point(647, 707);
+            this.decimalPlacesInput.Name = "decimalPlacesInput";
+            this.decimalPlacesInput.Size = new System.Drawing.Size(43, 20);
+            this.decimalPlacesInput.TabIndex = 47;
+            this.decimalPlacesInput.ValueChanged += new System.EventHandler(this.DecimalPlacesInput_ValueChanged);
+            // 
+            // normalizeDirection
+            // 
+            this.normalizeDirectionToggle.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.normalizeDirectionToggle.AutoSize = true;
+            this.normalizeDirectionToggle.Location = new System.Drawing.Point(336, 708);
+            this.normalizeDirectionToggle.Name = "normalizeDirection";
+            this.normalizeDirectionToggle.Size = new System.Drawing.Size(117, 17);
+            this.normalizeDirectionToggle.TabIndex = 48;
+            this.normalizeDirectionToggle.Text = "Normalize Direction";
+            this.normalizeDirectionToggle.UseVisualStyleBackColor = true;
+            this.normalizeDirectionToggle.CheckedChanged += new System.EventHandler(this.NormalizeDirection_CheckedChanged);
+            // 
             // SQFMMForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ClientSize = new System.Drawing.Size(1051, 670);
+            this.ClientSize = new System.Drawing.Size(1022, 748);
+            this.Controls.Add(this.normalizeDirectionToggle);
+            this.Controls.Add(this.decimalPlacesInput);
+            this.Controls.Add(this.decimalPlacesLabel);
             this.Controls.Add(this.arrayObjectsButton);
             this.Controls.Add(this.formatHelpTitle);
             this.Controls.Add(this.copyToClipboardButton);
@@ -510,6 +549,7 @@
             this.Name = "SQFMMForm";
             this.Text = "SQF Mission Manager";
             ((System.ComponentModel.ISupportInitialize)(this.indentsNumBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.decimalPlacesInput)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -557,6 +597,9 @@
         private System.Windows.Forms.Label formatHelpTitle;
         private System.Windows.Forms.Button arrayObjectsButton;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Label decimalPlacesLabel;
+        private System.Windows.Forms.NumericUpDown decimalPlacesInput;
+        private System.Windows.Forms.CheckBox normalizeDirectionToggle;
     }
 }
 
