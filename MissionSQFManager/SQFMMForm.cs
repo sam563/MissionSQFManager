@@ -103,24 +103,25 @@ namespace MissionSQFManager
             {
                 try 
                 {
-                    return preset.SelectSingleNode(xpath).InnerText;
+                    string key = preset.SelectSingleNode(xpath).InnerText;
+                    return (key == "default") ? presets.ChildNodes[0].SelectSingleNode(xpath).InnerText : key;
                 }
                 catch
                 {
-                    if (index > 0)
-                    {
-                        try
-                        {
-                            //Try to get from default preset instead
-                            return presets.ChildNodes[0].SelectSingleNode(xpath).InnerText;
-                        }
-                        catch
-                        {
-                            return string.Empty;
-                        }
-                    }
+                    //if (index > 0)
+                    //{
+                    //    try
+                    //    {
+                    //        //Try to get from default preset instead
+                    //        return presets.ChildNodes[0].SelectSingleNode(xpath).InnerText;
+                    //    }
+                    //    catch
+                    //    {
+                    //        return string.Empty;
+                    //    }
+                    //}
 
-                    return string.Empty;
+                    return string.Empty; //parsing will fail therefore we will not overwrite the current state for this property.
                 }
             }
 
@@ -129,6 +130,7 @@ namespace MissionSQFManager
             formatInputBox.Text = GetNodeText("Format");
             prefixLineInputBox.Text = GetNodeText("Prefix");
             suffixLineInputBox.Text = GetNodeText("Suffix");
+
             if (int.TryParse(GetNodeText("Indents"), out int i)) indentsNumBox.Value = i;
             if (bool.TryParse(GetNodeText("ReplaceClassnames"), out bool rc)) replaceClassnamesCheckBox.Checked = rc;
             if (bool.TryParse(GetNodeText("OrderByClassname"), out bool obc)) sortByNamesCheckBox.Checked = obc;
@@ -137,8 +139,11 @@ namespace MissionSQFManager
             if (bool.TryParse(GetNodeText("DiscardObjects"), out bool doj)) discardObjectsCheckBox.Checked = doj;
             if (bool.TryParse(GetNodeText("DiscardUnits"), out bool du)) discardUnitsCheckBox.Checked = du;
             if (bool.TryParse(GetNodeText("DiscardVehicles"), out bool dv)) discardVehiclesCheckBox.Checked = dv;
+            if (bool.TryParse(GetNodeText("NormalizeDirection"), out bool nd)) normalizeDirectionToggle.Checked = nd;
+            if (int.TryParse(GetNodeText("DecimalPlaces"), out int dp)) decimalPlacesInput.Value = dp;
 
             m_updateEnabled = true;
+
             UpdatePreviewer();
         }
 
