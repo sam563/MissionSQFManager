@@ -73,6 +73,8 @@ namespace MissionSQFManager
             loadFileToolTip.SetToolTip(openFileButton, "Load Arma generated .sqf mission file for the program to read from.");
             saveFileToolTip.SetToolTip(saveOutputButton, "Save generated output in the selected format.");
             relativePosToolTip.SetToolTip(relativePosition, "Sets object positions to be relative to this point.");
+            normalizeDirectionToolTip.SetToolTip(normalizeDirectionToggle, "Normalizes directions to be between 0 - 360.");
+            decimalPlacesToolTip.SetToolTip(decimalPlacesInput, "Sets the precision of decimal values.");
 
             arrayObjectsButton.Enabled = false;
             decimalPlacesInput.Value = 3;
