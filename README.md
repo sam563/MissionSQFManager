@@ -46,6 +46,9 @@ Raw Object Data - The umodified source data extracted from the original SQF miss
 #### Save Output
 Saves the current output to the selected output format.
 
+#### Copy to Clipboard
+Copies the current output to the clipboard.
+
 #### Relative Positions
 By default when a file is loaded the relative position field is populated by the combined center of all loaded objects.
 The user can define their own relative position by inputting each axis split with a comma.
@@ -61,6 +64,12 @@ If checked objects names will be replaced by replacements defined in `config.xml
 ```xml
 <Classname original="ClassnameToBeReplaced" replacement="ReplacementClassname"/>
 ```
+
+#### Normalize Direction
+Should the direction value be normalized between 0-360?
+
+#### Decimal Places
+Number of decimal places used in floating point values (Position and Direction)
 
 #### Presets
 Presets predetermine options and formatting for convenience.
@@ -93,4 +102,5 @@ To add a new preset, in the config use the syntax in the following example:
 * DiscardObjects - `Boolean` - Should objects be discarded from the output?
 * DiscardUnits - `Boolean` - Should units be discarded from the output?
 * DiscardVehicles - `Boolean` - Should vehicles be discarded from the output?
-
+* NormalizeDirection - `Boolean` - Should the direction value be normalized between 0-360?
+* DecimalPlaces - `Integer` - Number of decimal places used in floating point values (Position and Direction)
